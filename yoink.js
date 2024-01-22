@@ -40,7 +40,7 @@ async function growToMax(sec=0.000) {
 
 
 async function harvestCycle(sec=0.000) {
-  if (securityOffset >= WEAK_SEC) 
+  if (sec >= WEAK_SEC) 
     return await NS.weaken(Host);
   
   await NS.hack(Host);
