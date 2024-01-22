@@ -18,10 +18,20 @@ export async function main(ns) {
     hacks += await doHack(ns, host, executables[i]);
   }
 
-  if (hacks > ns.getServerNumPortsRequired(host)){
+  if (hacks >= ns.getServerNumPortsRequired(host)){
     ns.nuke(host);
-    ns.alert('Hot-diggity-dawg, Lady.');
+    ns.toast('Hot-diggity-dawg, Lady.');
+  } else {
+  	ns.toast('Hmm, that one didnt work...');
+  	return;
   }
+
+  // Success!
+  ns.write('bots.txt', host + "\n", 'a');
+  // @todo: add a bots_info.txt with system scan information
+
+  // start the remote botnet
+  ns.run('remote-init.js', 1, host);
 }
 
 
