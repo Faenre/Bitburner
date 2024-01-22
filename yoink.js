@@ -1,51 +1,48 @@
 /*
- This script requires 2.45GB of RAM to run for 1 thread(s)
+ This script requires 2.00GB of RAM to run for 1 thread(s)
   1.60GB | baseCost (misc)
   0.15GB | grow (fn)
   0.15GB | weaken (fn)
-  0.10GB | getServerMaxMoney (fn)
-  0.10GB | getServerMoneyAvailable (fn)
-  0.10GB | getServerMinSecurityLevel (fn)
-  0.10GB | getServerSecurityLevel (fn)
   0.10GB | hack (fn)
-  0.05GB | getHostname (fn)
  */
 
 let NS;
+let Host;
 
-/** @param {NS} ns */
+const GROW_SEC = 0.004
+const HACK_SEC = 0.002
+const WEAK_SEC = 0.050
+
+/** 
+ * @param {NS} ns 
+ * @arg {String} hostname, currently necessary
+ * */
 export async function main(ns) {
   NS = ns;
-  const host = NS.getHostname();
+  Host = NS.args[0]; // @todo read this from calibration file
   
   while (true) {
-    await growToMax(host);
-    await weakenToMinimum(host);
-    await harvestCycle(host);
+    await growToMax();
+    await harvestCycle();
   }
 }
 
-async function growToMax(host) {
-  const maximum  = NS.getServerMaxMoney(host);
-  let current = NS.getServerMoneyAvailable(host);
-  while (current < maximum) {
-    await NS.grow(host);
-  }
+
+async function growToMax(sec=0.000) {
+  // Grow until growth can't happen
+  if (await NS.grow(Host) > 1.000) 
+    return growToMax(sec + GROW_SEC);
+
+  // Undo the security gains
+  for (; sec > 0.00; sec -= WEAK_SEC)
+  	await NS.weaken(Host);
 }
 
-async function weakenToMinimum(host) {
-  const minimum = NS.getServerMinSecurityLevel(host);
-  while (getServerSecurityLevel(host) < minimum) {
-    await NS.weaken(host);
-  }
-}
 
-async function harvestCycle(host) {
-  await NS.hack(host);
-  await NS.hack(host);
-  await NS.hack(host);
-  await NS.weaken(host);
-  await NS.hack(host);
-  await NS.hack(host);
-  await NS.weaken(host);
+async function harvestCycle(sec=0.000) {
+  if (securityOffset >= WEAK_SEC) 
+    return await NS.weaken(Host);
+  
+  await NS.hack(Host);
+  return await harvestCycle(sec + HACK_SEC);
 }
