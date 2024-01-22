@@ -28,8 +28,8 @@ export async function main(ns) {
 
 
 async function growToMax(iter=0, sec=0.000) {
-  NS.print('Growth iteration: ' + iter);
-  NS.print('Security offset: ' + sec);
+  // NS.print('Growth iteration: ' + iter);
+  // NS.print('Security offset: ' + sec);
 
   if (sec >= WEAK_SEC){
     await NS.weaken(Host);
