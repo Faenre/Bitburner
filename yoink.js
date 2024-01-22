@@ -50,19 +50,22 @@ async function calibrate() {
   while (1.000 < await grow()) {}
 
   // Reset security to 0
-  while (SecurityBuildup >= 0.00) 
+  while (SecurityBuildup >= 0.00) {
   	await weaken();
+  }
 
   // Run a maximum-cycle of hacks
   const hacks = (WEAK_SEC - GROW_SEC) / HACK_SEC;
-  for (let i=0; i < hacks; i++) 
+  for (let i=0; i < hacks; i++) {
   	await hack();
+  }
   await weaken();
 
   // Count how many iterations of regrowth are necessary
   let regrowthIterations = 0;
-  while (1.000 < await grow())
+  while (1.000 < await grow()) {
   	regrowthIterations += 1;
+  }
 
   // Calibration complete!
   return regrowthIterations;
