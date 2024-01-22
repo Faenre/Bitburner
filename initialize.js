@@ -2,7 +2,7 @@
  * @param {NS} ns 
  */
 export async function main(ns) {
-  server = ns.getServer();
+  const server = ns.getServer();
 
   ns.write('hostname.txt',      server.hostname,          'w');
   ns.write('organization.txt',  server.organizationName,  'w');
