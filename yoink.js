@@ -45,8 +45,9 @@ export async function main(ns) {
  * per batch, which adds up over time.
  * */
 async function calibrate() {
+	await NS.print('Beginning calibration...');
 	// Set money to max (this might take a long time, the very first time executed)
-  while (await grow() > 1.000) {}
+  while (1.000 < await grow()) {}
 
   // Reset security to 0
   while (SecurityBuildup >= 0.00) 
@@ -55,12 +56,12 @@ async function calibrate() {
   // Run a maximum-cycle of hacks
   const hacks = (WEAK_SEC - GROW_SEC) / HACK_SEC;
   for (let i=0; i < hacks; i++) 
-  	await grow();
+  	await hack();
   await weaken();
 
   // Count how many iterations of regrowth are necessary
   let regrowthIterations = 0;
-  while (await grow() > 1.000)
+  while (1.000 < await grow())
   	regrowthIterations += 1;
 
   // Calibration complete!
