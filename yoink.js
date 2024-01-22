@@ -29,7 +29,7 @@ let SecurityBuildup = 0.000;
  * */
 export async function main(ns) {
   NS = ns;
-  Host = NS.args[0] || NS.read('hostname.txt');
+  Host = NS.args[0] || await NS.read('hostname.txt');
 
   let iterations = await calibrate();
   
