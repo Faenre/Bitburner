@@ -14,12 +14,11 @@ const HACK_SEC = 0.002
 const WEAK_SEC = 0.050
 
 /** 
- * @param {NS} ns 
- * @arg {String} hostname, currently necessary
+ * @param {NS} ns
  * */
 export async function main(ns) {
   NS = ns;
-  Host = NS.args[0]; // @todo read this from calibration file
+  Host = NS.read('hostname.txt');
   
   while (true) {
     await growToMax();
@@ -28,14 +27,17 @@ export async function main(ns) {
 }
 
 
-async function growToMax(sec=0.000) {
-  // Grow until growth can't happen
-  if (await NS.grow(Host) > 1.000) 
-    return growToMax(sec + GROW_SEC);
+async function growToMax(iter=0, sec=0.000) {
+  NS.print('Growth iteration: ' + iter);
+  NS.print('Security offset: ' + sec);
 
-  // Undo the security gains
-  for (; sec > 0.00; sec -= WEAK_SEC)
-  	await NS.weaken(Host);
+  if (sec >= WEAK_SEC){
+    await NS.weaken(Host);
+    sec -= WEAK_SEC;
+  }
+
+  if (await NS.grow(Host) > 1.000) 
+    return growToMax(iter + 1, sec + GROW_SEC);
 }
 
 
