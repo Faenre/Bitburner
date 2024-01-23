@@ -40,42 +40,43 @@ export async function main(ns) {
   }
 }
 
+
 async function growToMax(iterations=0) {
-	const growth = await grow();
+  const growth = await doGrow();
   if (growth > 1.000) 
-  	return await growToMax(iterations + 1);
+    return await growToMax(iterations + 1);
   else 
-  	return iterations;
+    return iterations;
 }
 
 
 async function resetSecurityBuildup() {
-	await weaken();
-	if (SecurityBuildup > 0.00)
-		await resetSecurityBuildup();
+  await doWeaken();
+  if (SecurityBuildup > 0.00)
+    await resetSecurityBuildup();
 }
 
 
 async function harvestCycle() {
-  if (SecurityBuildup >= WEAK_SEC) return sum;
-  await hack();
-  return await harvestCycle();
+  if (SecurityBuildup >= WEAK_SEC) return;
+  await doHack();
+  await harvestCycle();
 }
 
 
 // NS function wrappers:
 
-async function grow() {
-	const growth = await NS.grow(Host);
-	if (growth > 1.000) 
-		SecurityBuildup += GROW_SEC * Threads;
-	return growth;
+async function doGrow() {
+  const growth = await NS.grow(Host);
+  if (growth > 1.000) 
+    SecurityBuildup += GROW_SEC * Threads;
+  return growth;
 }
-async function hack() {
-	SecurityBuildup += HACK_SEC * Threads;
-	return await NS.hack(Host);
+async function doHack() {
+  SecurityBuildup += HACK_SEC * Threads;
+  await NS.hack(Host);
 }
-async function weaken() {
-	SecurityBuildup -= WEAK_SEC * Threads;
-	return await NS.weaken(Host);
+async function doWeaken() {
+  SecurityBuildup -= WEAK_SEC * Threads;
+  await NS.weaken(Host);
 }
