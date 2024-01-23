@@ -50,6 +50,7 @@ async function harvestCycle(ns, host, threads, iterations=0) {
     return;
   }
 
-  await ns.hack(host);
-  await harvestCycle(ns, host, threads, iterations + 1);
+  const amt = await ns.hack(host);
+  if (amt > 0) iterations += 1;
+  await harvestCycle(ns, host, threads, iterations);
 }
