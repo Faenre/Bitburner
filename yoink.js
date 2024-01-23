@@ -8,6 +8,7 @@
 
 let NS;
 let Host;
+let Threads;
 
 const GROW_SEC = 0.004;
 const HACK_SEC = 0.002;
@@ -30,6 +31,7 @@ let SecurityBuildup = 0.000;
 export async function main(ns) {
   NS = ns;
   Host = NS.args[0] || await NS.read('hostname.txt');
+  Threads = Math.floor(await NS.read('total_ram.txt') / 2)
 
   let iterations = await calibrate();
   
@@ -46,29 +48,37 @@ export async function main(ns) {
  * */
 async function calibrate() {
 	await NS.print('Beginning calibration...');
-	// Set money to max (this might take a long time, the very first time executed)
-  while (1.000 < await grow()) {}
+	// Set money to max 
+	// (this might take a long time, the very first time executed)
+  await growToMax();
 
   // Reset security to 0
-  while (SecurityBuildup >= 0.00) {
-  	await weaken();
-  }
+  await resetSecurityBuildup();
 
   // Run a maximum-cycle of hacks
-  const hacks = (WEAK_SEC - GROW_SEC) / HACK_SEC;
-  for (let i=0; i < hacks; i++) {
-  	await hack();
-  }
-  await weaken();
+  await harvestCycle();
 
-  // Count how many iterations of regrowth are necessary
-  let regrowthIterations = 0;
-  while (1.000 < await grow()) {
-  	regrowthIterations += 1;
-  }
+  // Return how many iterations of regrowth are necessary
+  const iterations = await growToMax();
 
-  // Calibration complete!
-  return regrowthIterations;
+  await NS.print('Calibrations complete!');
+  return iterations;
+}
+
+
+async function growToMax(iterations=0) {
+	const growth = await grow();
+  if (growth > 1.000) 
+  	await growToMax(iterations + 1);
+  else 
+  	return iterations;
+}
+
+
+async function resetSecurityBuildup() {
+	await weaken();
+	if (SecurityBuildup > 0.00)
+		await resetSecurityBuildup();
 }
 
 
