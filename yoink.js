@@ -33,43 +33,17 @@ export async function main(ns) {
   Host = NS.args[0] || await NS.read('hostname.txt');
   Threads = Math.floor(await NS.read('total_ram.txt') / 2)
 
-  let iterations = await calibrate();
-  
   while (true) {
+    await growToMax();
+    await resetSecurityBuildup();
     await harvestCycle();
-    await regrow(iterations);
   }
 }
-
-/**
- * Calibrates to figure out how many regrowths are necessary per batch of ~23 hacks.
- * This can take a long time the first time it executes, but saves several minutes
- * per batch, which adds up over time.
- * */
-async function calibrate() {
-	await NS.print('Beginning calibration...');
-	// Set money to max 
-	// (this might take a long time, the very first time executed)
-  await growToMax();
-
-  // Reset security to 0
-  await resetSecurityBuildup();
-
-  // Run a maximum-cycle of hacks
-  await harvestCycle();
-
-  // Return how many iterations of regrowth are necessary
-  const iterations = await growToMax();
-
-  await NS.print('Calibrations complete!');
-  return iterations;
-}
-
 
 async function growToMax(iterations=0) {
 	const growth = await grow();
   if (growth > 1.000) 
-  	await growToMax(iterations + 1);
+  	return await growToMax(iterations + 1);
   else 
   	return iterations;
 }
@@ -82,20 +56,10 @@ async function resetSecurityBuildup() {
 }
 
 
-async function harvestCycle(sum) {
-  if (SecurityBuildup >= WEAK_SEC) {
-    await weaken();
-    return sum;
-  }
-  const amtStolen = await hack();
-  return await harvestCycle(sum + amtStolen);
-}
-
-
-async function regrow(counter) {
-	if (counter <= 0) return;
-	await grow();
-	return await regrow(counter - 1);
+async function harvestCycle() {
+  if (SecurityBuildup >= WEAK_SEC) return sum;
+  await hack();
+  return await harvestCycle();
 }
 
 
@@ -104,14 +68,14 @@ async function regrow(counter) {
 async function grow() {
 	const growth = await NS.grow(Host);
 	if (growth > 1.000) 
-		SecurityBuildup += GROW_SEC;
+		SecurityBuildup += GROW_SEC * Threads;
 	return growth;
 }
 async function hack() {
-	SecurityBuildup += HACK_SEC;
+	SecurityBuildup += HACK_SEC * Threads;
 	return await NS.hack(Host);
 }
 async function weaken() {
-	SecurityBuildup -= WEAK_SEC;
+	SecurityBuildup -= WEAK_SEC * Threads;
 	return await NS.weaken(Host);
 }
