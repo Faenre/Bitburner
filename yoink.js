@@ -6,16 +6,6 @@
   0.10GB | hack (fn)
  */
 
-let NS;
-let Host;
-let Threads;
-
-const GROW_SEC = 0.004;
-const HACK_SEC = 0.002;
-const WEAK_SEC = 0.050;
-
-let SecurityBuildup = 0.000;
-
 /** 
  * This single-node script aims for optimum money farming.
  * 
@@ -29,54 +19,37 @@ let SecurityBuildup = 0.000;
  * @param {NS} ns
  * */
 export async function main(ns) {
-  NS = ns;
-  Host = NS.args[0] || await NS.read('hostname.txt');
-  Threads = Math.floor(await NS.read('total_ram.txt') / 2)
+  const host = ns.args[0] || await ns.read('hostname.txt');
+  const threads = Math.floor(await ns.read('total_ram.txt') / 2)
 
   while (true) {
-    await growToMax();
-    await resetSecurityBuildup();
-    await harvestCycle();
+    await growToMax(ns, host);
+    await harvestCycle(ns, host, threads);
   }
 }
 
+async function growToMax(ns, host, iterations=0) {
+  const growth = await ns.grow(host);
+  if (growth == 1.000) return;
 
-async function growToMax(iterations=0) {
-  const growth = await doGrow();
-  if (growth > 1.000) 
-    return await growToMax(iterations + 1);
-  else 
-    return iterations;
+  iterations += 1;
+  while (iterations >= 12.5) {
+    await ns.weaken(host);
+    iterations -= 12.5;
+  }
+
+  return await growToMax(ns, host, iterations);
 }
 
 
-async function resetSecurityBuildup() {
-  await doWeaken();
-  if (SecurityBuildup > 0.00)
-    await resetSecurityBuildup();
-}
+async function harvestCycle(ns, host, threads, iterations=0) {
+  const totalThreads = threads * iterations;
+  if (totalThreads > 25) {
+    for (let i=0; i < (totalThreads / 25); i++)
+      await ns.weaken(host);
+    return;
+  }
 
-
-async function harvestCycle() {
-  if (SecurityBuildup >= WEAK_SEC) return;
-  await doHack();
-  await harvestCycle();
-}
-
-
-// NS function wrappers:
-
-async function doGrow() {
-  const growth = await NS.grow(Host);
-  if (growth > 1.000) 
-    SecurityBuildup += GROW_SEC * Threads;
-  return growth;
-}
-async function doHack() {
-  SecurityBuildup += HACK_SEC * Threads;
-  await NS.hack(Host);
-}
-async function doWeaken() {
-  SecurityBuildup -= WEAK_SEC * Threads;
-  await NS.weaken(Host);
+  await ns.hack(host);
+  await harvestCycle(ns, host, threads, iterations + 1);
 }
