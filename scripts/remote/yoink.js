@@ -19,8 +19,8 @@
  * @param {NS} ns
  * */
 export async function main(ns) {
-  const host = ns.args[0] || await ns.read('hostname.txt');
-  const threads = Math.floor(await ns.read('total_ram.txt') / 2)
+  const host = ns.args[0] || await ns.read('/local/hostname.txt');
+  const threads = Math.floor(await ns.read('/local/total_ram.txt') / 2)
 
   while (true) {
     await growToMax(ns, host);
