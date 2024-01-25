@@ -18,19 +18,17 @@ export async function main(ns) {
     hacks += await doHack(ns, host, executables[i]);
   }
 
-  if (hacks >= ns.getServerNumPortsRequired(host)){
-    ns.nuke(host);
-    ns.toast('Hot-diggity-dawg, Lady.');
-  } else {
-  	ns.toast('Hmm, that one didnt work...');
-  	return;
+  if (hacks < ns.getServerNumPortsRequired(host)) {
+    rs.toast('The door is closed, Lady 62C.');
+    return;
   }
 
-  // Success!
-  ns.write('bots.txt', host + "\n", 'a');
-  // @todo: add a bots_info.txt with system scan information
+  ns.nuke(host);
+  ns.toast('The door is open, Lady 62C.');
 
-  // start the remote botnet
+  if (ns.getServerMaxMoney > 0)
+    ns.write('bots.txt', `${host}\n`, 'a');
+
   ns.run('remote-init.js', 1, host);
 }
 

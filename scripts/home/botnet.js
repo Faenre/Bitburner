@@ -3,9 +3,9 @@ let Command;
 let Target;
 let Botnet;
 
-const GROW_URL = 'https://raw.githubusercontent.com/Faenre/Bitburner/main/grow.js';
-const WEAKEN_URL = 'https://raw.githubusercontent.com/Faenre/Bitburner/main/weaken.js';
-const YOINK_URL = 'https://raw.githubusercontent.com/Faenre/Bitburner/main/yoink.js';
+const GROW_URL = 'https://raw.githubusercontent.com/Faenre/Bitburner/main/scripts/remote/grow.js';
+const WEAKEN_URL = 'https://raw.githubusercontent.com/Faenre/Bitburner/main/scripts/remote/weaken.js';
+const YOINK_URL = 'https://raw.githubusercontent.com/Faenre/Bitburner/main/scripts/remote/yoink.js';
 
 /** 
  * @param {NS} ns 
