@@ -17,7 +17,7 @@ export async function main(ns) {
   const offsets = calcOffsets(ns, host);
   const threads = calcThreads(ns, host, ramHost);
 
-  ns.print('Thread counts: '  + threads);
+  ns.print('Thread counts: ' + threads);
   ns.print('Thread offsets: ' + threads);
 
   while (true) {
@@ -56,7 +56,7 @@ function calcThreads(ns, host, ramHost, hacks = 1) {
   threads.grow = Math.ceil(ns.growthAnalyze(host, 1 / (1 - hackPct)));
   threads.weaken = countWeakens(threads.hack, threads.grow);
 
-  if (!enoughMemoryForThreads(ns, ramHost, threads)) 
+  if (!enoughMemoryForThreads(ns, ramHost, threads))
     return false;
 
   return calcThreads(ns, host, ramHost, hacks + 1) || threads;
@@ -76,13 +76,16 @@ function enoughMemoryForThreads(ns, host, threads) {
 }
 
 async function launch(ns, host, threads, offsets, ramHost) {
+  const retries = Math.floor(ns.getGrowTime(host) / ns.getHackTime(host));
   for (let script of ['hack', 'grow', 'weaken']) {
     await ns.exec(
       SCRIPTS[script],  // script to run
       ramHost,
       threads[script],  // how many threads
-      host,             // args (target, offset in ms)
-      offsets[script],
+      // Script args:
+      host,             // target hostname
+      offsets[script],  // time delay (in ms)
+      retries,          // number of retries (for hack %)
     );
   }
 }
