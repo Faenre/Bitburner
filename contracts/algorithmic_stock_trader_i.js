@@ -12,12 +12,6 @@ Determine the maximum possible profit you can earn using at most one transaction
 
 */
 
-/**
- * Basic approach: anchor-runner
- * 
- * For each i, send a runner through i++ to find the greatest difference.
- */
-
 /** 
  * @param {NS} ns 
  */
@@ -26,10 +20,17 @@ export async function main(ns) {
   const file = ns.args[1];
 
   const prices = ns.codingcontract.getData(file, host);
-  const answer = solve(prices);
+  const answer = solve2(prices);
   const result = ns.codingcontract.attempt(answer, file, host);
   ns.toast(result, 'info', null);
 }
+
+/**
+ * First approach:
+ * 
+ * For each i, send a runner through i++ to find the greatest difference.
+ * It's not time-efficient, at O(N^2).
+ */
 
 function solve(prices) {
   let highest = 0;
@@ -41,4 +42,25 @@ function solve(prices) {
     }
   }
   return highest;
+}
+
+/**
+ * Second approach: keep track of highs, and always search for lows.
+ * 
+ * Handles the problem in O(N) time.
+ */
+function solve2(prices) {
+  let highestPrice = 0;
+  let biggestDifference = 0;
+
+  for (let currentPrice of prices) {
+    if (currentPrice > highestPrice) 
+      highestPrice = currentPrice;
+
+    let currentDifference = highestPrice - currentPrice;
+    if (currentDifference > biggestDifference)
+      biggestDifference = currentDifference;
+  }
+
+  return biggestDifference;
 }
