@@ -28,11 +28,11 @@ export async function main(ns) {
   const answer = solve(data);
 
   const result = ns.codingcontract.attempt(answer, filename, host);
-  if (result) 
-    ns.toast(result, 'success', 5000);
-  else
-    ns.toast('Solution failed! Double check and try again.', 'error', null);
-  return
+	if (result) 
+		ns.toast(result, 'success', 5000);
+	else
+		ns.toast('Solution failed! Double check and try again.', 'error', null);
+	return
 }
 
 // Basic approach:
@@ -42,13 +42,16 @@ export async function main(ns) {
 // 3a. end a sequence at count = 9
 // 4. join the results together
 
-function solve(data) {
+/**
+ * @param {String} inputData the info given for the coding contract
+ */
+export default function solve(inputData) {
   const results = [];
 
-  let currentChar = data[0];
+  let currentChar = inputData[0];
   let streak = 0;
 
-  for (let newChar of data) {
+  for (let newChar of inputData) {
     if (newChar != currentChar) {         // Reset a streak to 0 if the sequence is broken
       results.push(streak + currentChar); // (the streak increments later)
       currentChar = newChar;

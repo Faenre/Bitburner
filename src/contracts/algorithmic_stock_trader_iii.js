@@ -39,29 +39,32 @@ export async function main(ns) {
   - Keep track of each maximum,
   - At each maximum, subtract from max and add (call the solve with the counter decremented)
 */
-function solve(data, startAt=0, counter=2) {
-  if (counter === 0 || startAt >= data.length) return 0;
+
+
+/**
+ * @param {Array<Number>} inputData the info given for the coding contract
+ * @param {Number} startAt an internal counter; leave default
+ * @param {Number} counter an internal counter; leave default
+ */
+export default function solve(inputData, startAt=0, counter=2) {
+  if (counter === 0 || startAt >= inputData.length) return 0;
   console.log('starting at i=' + startAt);
 
-  let maximum = data[startAt];
-  let minimum = data[startAt];
+  let maximum = inputData[startAt];
+  let minimum = inputData[startAt];
   let highestProfit = 0;
 
-  for (let i=startAt+1; i < data.length; i++) {
-    if (data[i] < minimum) {
-      console.log('- minimum found: ' + data[i]);
+  for (let i=startAt+1; i < inputData.length; i++) {
+    if (inputData[i] < minimum) {
       // new buying point found, ignore all prevous maximums
-      maximum = data[i];
-      minimum = data[i];
-    } else if (data[i] > maximum) {
-      console.log('+ maximum found: ' + data[i]);
-      maximum = data[i];
-      if (i+1 < data.length && data[i+1] <= maximum) {
-        console.log(`${counter==2 ? 'TOP' : 'bot'} ${maximum} - ${minimum} = ${maximum - minimum}`)
-        highestProfit = Math.max(highestProfit, (maximum - minimum) + solve(data, i+1, counter-1));
+      maximum = inputData[i];
+      minimum = inputData[i];
+    } else if (inputData[i] > maximum) {
+      maximum = inputData[i];
+      if (i+1 < inputData.length && inputData[i+1] <= maximum) {
+        highestProfit = Math.max(highestProfit, (maximum - minimum) + solve(inputData, i+1, counter-1));
       }
     }
   }
-  console.log('Highest profit at counter ' + counter + ' is ' + highestProfit);
   return highestProfit;
 }

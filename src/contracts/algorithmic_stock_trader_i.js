@@ -32,11 +32,14 @@ export async function main(ns) {
   ns.codingcontract.attempt(answer, file, host);
 }
 
-function solve(prices) {
+/**
+ * @param {Array<Number>} inputData the info given for the coding contract
+ */
+export default function solve(inputData) {
   let highest = 0;
-  for (let i=0; i < prices.length-1; i++) {
-    for (let j=i+1; j < prices.length; j++) {
-      let difference = prices[i] - prices[j]
+  for (let i=0; i < inputData.length-1; i++) {
+    for (let j=i+1; j < inputData.length; j++) {
+      let difference = inputData[i] - inputData[j]
 
       if (difference > highest) 
         highest = difference

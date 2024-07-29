@@ -4,7 +4,7 @@ const TYPE = 'Encryption I: Caesar Cipher';
 Caesar cipher is one of the simplest encryption technique. It is a type of substitution cipher in which each letter in the plaintext is replaced by a letter some fixed number of positions down the alphabet. For example, with a left shift of 3, D would be replaced by A, E would become B, and A would become X (because of rotation).
 
 You are given an array with two elements:
-  ["ARRAY CACHE LOGIC PRINT PASTE", 1]
+	["ARRAY CACHE LOGIC PRINT PASTE", 1]
 The first element is the plaintext, the second element is the left shift value.
 
 Return the ciphertext as uppercase string. Spaces remains the same.
@@ -36,28 +36,31 @@ Determine the maximum possible profit you can earn using at most one transaction
  * @param {NS} ns 
  */
 export async function main(ns) {
-  const host = ns.args[0];
-  const file = ns.args[1];
+	const host = ns.args[0];
+	const file = ns.args[1];
 
-  const data = ns.codingcontract.getData(file, host);
-  const answer = solve(data);
-  ns.codingcontract.attempt(answer, file, host);
+	const data = ns.codingcontract.getData(file, host);
+	const answer = solve(data);
+	ns.codingcontract.attempt(answer, file, host);
 }
 
-function solve(data) {
-  const [phrase, shift] = data;
-  
-  return phrase.split('').map(char => encrypt(char, shift)).join('');
+/**
+ * @param {String} inputData the info given for the coding contract
+ */
+export default function solve(inputData) {
+	const [phrase, shift] = inputData;
+
+	return phrase.split('').map(char => encrypt(char, shift)).join('');
 }
 
 const ASCII_OFFSET = 65; // 'A'.charCodeAt(0);
 
 function encrypt(char, shift) {
-  const charCode = char.charCodeAt(0) - ASCII_OFFSET;
-  if ((charCode < 0) || (charCode > 26)) 
-    return char;
-  const newCharCode = (26 + charCode - shift) % 26 + ASCII_OFFSET;
-  return String.fromCharCode(newCharCode);
+	const charCode = char.charCodeAt(0) - ASCII_OFFSET;
+	if ((charCode < 0) || (charCode > 26))
+		return char;
+	const newCharCode = (26 + charCode - shift) % 26 + ASCII_OFFSET;
+	return String.fromCharCode(newCharCode);
 }
 
 /* Notes, pasted from terminal:
