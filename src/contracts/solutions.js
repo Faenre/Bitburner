@@ -9,6 +9,7 @@ import { default as encryption_i } from "contracts/encryption_i";
 import { default as encryption_ii } from "contracts/encryption_ii";
 
 import { default as largest_prime_factor } from "contracts/largest_prime_factor";
+import { default as proper_2_coloring_of_graph } from "contracts/proper_2_coloring_of_graph";
 
 import { default as unique_paths_i } from "contracts/unique_paths_i";
 
@@ -26,5 +27,6 @@ export const SOLVERS = {
 	"Encryption I: Caesar Cipher": encryption_i,
 	"Encryption II: Vigenère Cipher": encryption_ii,
 	"Find Largest Prime Factor": largest_prime_factor,
+	"Proper 2-Coloring of a Graph": proper_2_coloring_of_graph,
 	"Unique Paths in a Grid I": unique_paths_i,
 }
