@@ -1,5 +1,7 @@
 import { default as algorithmic_stock_trader_i } from "contracts/algorithmic_stock_trader_i";
+import { default as algorithmic_stock_trader_ii } from "contracts/algorithmic_stock_trader_ii";
 import { default as algorithmic_stock_trader_iii } from "contracts/algorithmic_stock_trader_iii";
+import { default as algorithmic_stock_trader_iv } from "contracts/algorithmic_stock_trader_iv";
 
 import { default as compression_i } from "contracts/compression_i";
 
@@ -17,7 +19,9 @@ import { default as unique_paths_i } from "contracts/unique_paths_i";
  */
 export const SOLVERS = {
 	"Algorithmic Stock Trader I": algorithmic_stock_trader_i,
+	"Algorithmic Stock Trader II": algorithmic_stock_trader_ii,
 	"Algorithmic Stock Trader III": algorithmic_stock_trader_iii,
+	"Algorithmic Stock Trader IV": algorithmic_stock_trader_iv,
 	"Compression I: RLE Compression": compression_i,
 	"Encryption I: Caesar Cipher": encryption_i,
 	"Encryption II: Vigenère Cipher": encryption_ii,
