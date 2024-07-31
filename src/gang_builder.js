@@ -9,6 +9,8 @@
 
 /** @param {NS} ns */
 export async function main(ns) {
+  ns.disableLog('gang.purchaseEquipment');
+  
   if (!ns.gang.inGang()) {
     ns.tprint('ERROR: not in a gang! Aborting.');
     return
@@ -72,7 +74,7 @@ class Gang {
   growTeam() {
     const workers = this.workers();
     const vigilantes = this.vigilantes();
-    for (let i=0; i < vigilantes; i++)
+    for (let i=0; i < Math.min(workers, vigilantes); i++)
       workers[i].doVigilanteWork();
     for (let i=vigilantes; i < workers.length; i++) 
       workers[i].gainRespect();
@@ -85,28 +87,52 @@ class Gang {
     // const territoryWorkerQty = this.atMaxSize() ? Math.round((1 - conflictWinRate) * workers.length) : 0
     let territoryWorkerQty = Math.round((1.00 - this.worstConflictPct()) * workers.length);
     if (!this.gangInfo.territoryWarfareEngaged) territoryWorkerQty += 3;
+    if (this.allTerritoryOwned()) territoryWorkerQty = 0; // @TODO: refactor this!!!
     const territoryWorkers = workers.slice(0,territoryWorkerQty);
     const moneyWorkers = workers.slice(territoryWorkerQty,workers.length);
     this.assignGainTerritory(territoryWorkers);
     this.assignSmartMoney(moneyWorkers);
   }
 
+  // @TODO: refactor this
   enableConflictIfReady() {
+    if (this.allTerritoryOwned()) {
+      this.disableConflict();
+      return;
+    }
     const conflictWinRate = this.worstConflictPct()
-    if (!this.gangInfo.territoryWarfareEngaged && conflictWinRate >= Gang.CONFLICT_THRESHOLD) {
-      this.ns.gang.setTerritoryWarfare(true);
-      this.ns.toast('Gang territory conflicts enabled!', 'warning', 20e3);
-    } else if (this.gangInfo.territoryWarfareEngaged && conflictWinRate < Gang.CONFLICT_THRESHOLD) {
-      this.ns.gang.setTerritoryWarfare(false);
-      this.ns.toast('Gang territory conflicts disabled!', 'warning', 20e3);
+    if (conflictWinRate >= Gang.CONFLICT_THRESHOLD) {
+      this.enableConflict();
+      return;
+    } 
+    if (conflictWinRate < Gang.CONFLICT_THRESHOLD) {
+      this.disableConflict();
+      return;
     }
   }
 
+  conflictEnabled = () => this.gangInfo.territoryWarfareEngaged;
+  allTerritoryOwned = () => this.gangInfo.territory == 1.00;
+
+  enableConflict() {
+    if (this.conflictEnabled()) 
+      return;
+    this.ns.gang.setTerritoryWarfare(true);
+    this.ns.toast('Gang territory conflicts enabled!', 'warning', 10e3);
+  }
+
+  disableConflict() {
+    if (!this.conflictEnabled()) 
+      return;
+    this.ns.gang.setTerritoryWarfare(false);
+    this.ns.toast('Gang territory conflicts disabled!', 'warning', 10e3);
+  }
+
   assignSmartMoney(workers) {
-    const vigilantes = this.vigilantes();
-    for (let i=0; i < Math.min(vigilantes, workers.length); i++)
-      workers[i].doVigilanteWork();
-    for (let i=vigilantes; i < workers.length; i++) 
+    // const vigilantes = this.vigilantes();
+    // for (let i=0; i < Math.min(vigilantes, workers.length); i++)
+    //  workers[i].doVigilanteWork();
+    for (let i=0; i < workers.length; i++) 
       workers[i].makeMoney();
   }
 
@@ -130,7 +156,10 @@ class Gang {
   size = () => this.members.length;
   atMaxSize = () => this.ns.gang.respectForNextRecruit() == Infinity;
   workers = () => this.members.filter((member) => member.readyForWork());
-  vigilantes = () => Math.round((1 - this.gangInfo.wantedPenalty) * 100 * this.workers().length);
+  vigilantes() {
+    if (this.gangInfo.wantedLevel < 100) return 0;
+    return Math.round((1 - this.gangInfo.wantedPenalty) * 100 * this.workers().length);
+  } 
 }
 
 
@@ -158,7 +187,6 @@ class GangMember {
     'Greta', 'Hope', 'Illia', 'Jasmine', 'Katrina', 'Lavender',
   ];
 
-  static ASCEND_THRESHOLD = 1.4; // how aggressively do we ascend?
   static ASCEND_SKILLS_PER_MULT = 130; // how many skills should +1x ascend mean before use?
   static WALLET_THRESHOLD = 0.15; // what percent of our wallet do we use to fund the gang?
   static STATS = {
@@ -189,15 +217,18 @@ class GangMember {
 
   ascend() {
     const avgBonus = this.avgAscensionBonus();
-    if (avgBonus <= GangMember.ASCEND_THRESHOLD) 
+    if (avgBonus < this.ascendThreshold(avgBonus))
       return;
     if (this.info().task == GangMember.TASKS.TERRORISM)
-      return;
+      return; // don't ascend while explicitly trying to *gain* respect! super counterprodutive.
     this.ns.gang.ascendMember(this.name);
     this.ns.gang.setMemberTask(this.name, GangMember.TASKS.TRAIN_COMBAT);
     this.ns.print(`INFO ascending ${this.name}`);
     this.ns.toast(`${this.name} ascended!`, 'info', 5000);
   }
+
+  // formula provided thanks to jeek / @tadzhikistan on discord
+  ascendThreshold = (mult) => 1.66 - 0.62 / Math.exp((2 / mult) ** 2.24);
 
   avgAscensionBonus() {
     const expectedResults = this.ns.gang.getAscensionResult(this.name);
