@@ -11,6 +11,7 @@ import { default as encryption_ii } from "contracts/encryption_ii";
 import { default as largest_prime_factor } from "contracts/largest_prime_factor";
 import { default as proper_2_coloring_of_graph } from "contracts/proper_2_coloring_of_graph";
 
+import { default as generate_ip_addresses } from "contracts/generate_ip_addresses";
 import { default as unique_paths_i } from "contracts/unique_paths_i";
 
 /**
@@ -26,6 +27,7 @@ export const SOLVERS = {
 	"Compression I: RLE Compression": compression_i,
 	"Encryption I: Caesar Cipher": encryption_i,
 	"Encryption II: Vigenère Cipher": encryption_ii,
+	"Generate IP Addresses": generate_ip_addresses,
 	"Find Largest Prime Factor": largest_prime_factor,
 	"Proper 2-Coloring of a Graph": proper_2_coloring_of_graph,
 	"Unique Paths in a Grid I": unique_paths_i,
