@@ -4,7 +4,7 @@
   Usage:
     1. Join a combat gang (e.g. Slum Snakes, Tetrads, The Dark Army, etc)
     2. Run this script (needs > 32gb RAM!)
-    3. Let it run (takes ~12 hours to take over the streets, assuming you already have $$)
+    3. Let it run (takes ~12 hours to take over the streets, assuming you already have $$$)
 */
 
 /** @param {NS} ns */
