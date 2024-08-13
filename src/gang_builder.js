@@ -4,7 +4,7 @@
   Usage: 
     1. Join a combat gang (e.g. Slum Snakes, Tetrads, The Dark Army, etc)
     2. Run this script (needs > 32gb RAM!)
-    3. Let it run (takes ~12 hours to take over the streets)
+    3. Let it run (takes ~12 hours to take over the streets, assuming you already have $$)
 */
 
 /** @param {NS} ns */
@@ -26,7 +26,14 @@ export async function main(ns) {
 
 
 class Gang {
-  static CONFLICT_THRESHOLD = 0.60;
+  static ENABLE_CONFLICT_THRESHOLD = 0.60;
+  static INCREASE_POWER_THRESHOLD = 0.825;
+
+  static INTENTS = {
+    GAIN_RESPECT: 'Gaining Respect',
+    GAIN_TERRITORY: 'Increasing Power',
+    MAKE_MONEY: 'Making Money',
+  }
 
   constructor(ns) {
     this.gangInfo = ns.gang.getGangInformation();
@@ -34,132 +41,103 @@ class Gang {
     this.ns = ns;
   }
 
+  size = () => this.members.length;
+  atMaxSize = () => this.ns.gang.respectForNextRecruit() == Infinity;
+  workers = () => this.members.filter((member) => member.readyForWork());
+
   apply() {
+    // HR and bookkeeping
     this.updateNames();
     this.recruit();
     this.ascend();
     this.buyUpgrades();
-    if (this.atMaxSize())
-      this.doStrategy();
-    else
-      this.growTeam();
-  }
-
-  updateNames() {
-    for (let i=0; i < this.members.length; i++) 
-      this.members[i].updateName(i);
-  }
-
-  recruit() {
-    while (this.ns.gang.canRecruitMember()) {
-      const name = GangMember.NAMES[this.members.length];
-      this.ns.gang.recruitMember(name);
-      this.members.push(new GangMember(this.ns, name, true));
-      this.ns.toast(`Recruited ${name}!`, 'success', 6000);
-    }
-  }
-
-  ascend() {
-    for (let member of this.members)
-      member.ascend();
-  }
-
-  buyUpgrades() {
-    for (let gangster of this.members)
-      gangster.upgradeEquipment();
-  }
-
-  // -----
-
-  growTeam() {
-    const workers = this.workers();
-    const vigilantes = this.vigilantes();
-    for (let i=0; i < Math.min(workers, vigilantes); i++)
-      workers[i].doVigilanteWork();
-    for (let i=vigilantes; i < workers.length; i++) 
-      workers[i].gainRespect();
-  }
-
-  doStrategy() {
+    
+    // 
     this.enableConflictIfReady();
 
-    const workers = this.workers();
-    // const territoryWorkerQty = this.atMaxSize() ? Math.round((1 - conflictWinRate) * workers.length) : 0
-    let territoryWorkerQty = Math.round((1.00 - this.worstConflictPct()) * workers.length);
-    if (!this.gangInfo.territoryWarfareEngaged) territoryWorkerQty += 3;
-    if (this.allTerritoryOwned()) territoryWorkerQty = 0; // @TODO: refactor this!!!
-    const territoryWorkers = workers.slice(0,territoryWorkerQty);
-    const moneyWorkers = workers.slice(territoryWorkerQty,workers.length);
-    this.assignGainTerritory(territoryWorkers);
-    this.assignSmartMoney(moneyWorkers);
+    this.intent = null
+    || this.assignGainRespect()
+    || this.assignGainTerritory()
+    || this.assignMakeMoney();
   }
 
-  // @TODO: refactor this
+  updateNames = () => this.members.forEach((m, i) => m.updateName(i));
+
+  recruit() {
+    while (this.ns.gang.canRecruitMember())
+      this.members.push(GangMember.recruit(this.ns, this.members.length));
+  }
+
+  ascend = () => this.members.forEach(m => m.ascend());
+
+  buyUpgrades = () => this.members.forEach(m => m.upgradeEquipment());
+
   enableConflictIfReady() {
-    if (this.allTerritoryOwned()) {
-      this.disableConflict();
-      return;
-    }
-    const conflictWinRate = this.worstConflictPct()
-    if (conflictWinRate >= Gang.CONFLICT_THRESHOLD) {
-      this.enableConflict();
-      return;
-    } 
-    if (conflictWinRate < Gang.CONFLICT_THRESHOLD) {
-      this.disableConflict();
-      return;
-    }
+    if (this.allTerritoryOwned())
+      return this.disableConflict();
+
+    if (this.worstConflictPct() < Gang.ENABLE_CONFLICT_THRESHOLD)
+      return this.disableConflict();
+
+    return this.enableConflict();
   }
 
-  conflictEnabled = () => this.gangInfo.territoryWarfareEngaged;
   allTerritoryOwned = () => this.gangInfo.territory == 1.00;
 
   enableConflict() {
     if (this.conflictEnabled()) 
       return;
     this.ns.gang.setTerritoryWarfare(true);
-    this.ns.toast('Gang territory conflicts enabled!', 'warning', 10e3);
+    this.ns.toast('Gang territory conflicts enabled!', 'info', 10e3);
   }
 
   disableConflict() {
     if (!this.conflictEnabled()) 
       return;
     this.ns.gang.setTerritoryWarfare(false);
-    this.ns.toast('Gang territory conflicts disabled!', 'warning', 10e3);
+    if (this.allTerritoryOwned())
+      this.ns.toast('Gang territory now at 100%!', 'success', null);
+    else
+      this.ns.toast('Gang territory conflicts disabled!', 'warning', 10e3);
   }
 
-  assignSmartMoney(workers) {
-    // const vigilantes = this.vigilantes();
-    // for (let i=0; i < Math.min(vigilantes, workers.length); i++)
-    //  workers[i].doVigilanteWork();
-    for (let i=0; i < workers.length; i++) 
-      workers[i].makeMoney();
+  conflictEnabled = () => this.gangInfo.territoryWarfareEngaged;
+
+  assignGainRespect() {
+    if (this.atMaxSize()) return false;
+
+    this.workers().forEach(w => w.gainRespect());
+    return Gang.INTENTS.GAIN_RESPECT;
   }
 
-  assignGainTerritory(workers) {
-    for (let worker of workers)
-      worker.gainTerritory();
+  assignGainTerritory() {
+    if (this.allTerritoryOwned()) return false;
+    if (this.worstConflictPct() > Gang.INCREASE_POWER_THRESHOLD) return false;
+
+    this.workers().forEach(w => w.gainTerritory());
+    return Gang.INTENTS.GAIN_TERRITORY;
   }
 
+  assignMakeMoney() {
+    this.workers().forEach(w => w.makeMoney());
+    return Gang.INTENTS.MAKE_MONEY;
+  }
+
+  // returns a decimal of the worst conflict win chance
   worstConflictPct() {
-    // returns a decimal of the worst conflict win chance
-    const otherGangPowers = Object.values(this.enemyGangs()).map(stats => stats.power);
-    return this.gangInfo.power / (this.gangInfo.power + Math.max(...otherGangPowers));
+    const highestEnemyPower = Object
+      .values(this.enemyGangs())
+      .filter(stats => stats.territory)
+      .map(stats => stats.power)
+      .reduce((a, b) => a > b ? a : b);
+    return this.gangInfo.power / (this.gangInfo.power + highestEnemyPower);
   }
 
   enemyGangs() {
-    const gangInfos = this.ns.gang.getOtherGangInformation();
-    delete gangInfos[this.gangInfo.faction];
-    return gangInfos;
+    const gangs = this.ns.gang.getOtherGangInformation();
+    delete gangs[this.gangInfo.faction];
+    return gangs;
   }
-
-  size = () => this.members.length;
-  atMaxSize = () => this.ns.gang.respectForNextRecruit() == Infinity;
-  workers = () => this.members.filter((member) => member.readyForWork());
-  vigilantes() {
-    if (this.gangInfo.wantedLevel < 100) return 0;
-    return Math.round((1 - this.gangInfo.wantedPenalty) * 100 * this.workers().length);
-  } 
 }
 
 
@@ -195,17 +173,39 @@ class GangMember {
     'hacking': ['cha', 'hack'],
     }
 
-  constructor(ns, name, isNewbie=false) {
+  static HACKING_ITEMS = [
+    'NUKE Rootkit',
+    'Soulstealer Rootkit',
+    'Jack the Ripper',
+    'Hmap Node',
+    'Demon Rootkit',
+    'BitWire',
+    'DataJack',
+    'Neuralstimulator',
+  ]
+
+  /**
+   * Recruits a new gang member.
+   * 
+   * @param {NS} ns
+   * @param {Number} integer ID, between 0-11 inclusive
+   */
+  static recruit(ns, id) {
+    const name = GangMember.NAMES[id];
+    ns.gang.recruitMember(name);
+    ns.toast(`Recruited ${name}!`, 'success', 6000);
+    const gangMember = new GangMember(ns, name);
+    gangMember.trainCombat();
+    return gangMember;
+  }
+
+  constructor(ns, name) {
     this.ns = ns;
     this.name = name;
     this.gangType = 'combat';
-    if (isNewbie)
-      this.startWork(GangMember.TASKS.TRAIN_COMBAT);
   }
 
-  info() {
-    return this.ns.gang.getMemberInformation(this.name);
-  }
+  info = () => this.ns.gang.getMemberInformation(this.name);
 
   updateName(id) {
     const expectedName = GangMember.NAMES[id]
@@ -239,28 +239,44 @@ class GangMember {
 
   upgradeEquipment() {
     let moneyThreshold = this.ns.getPlayer().money * GangMember.WALLET_THRESHOLD;
-    for (let [item, owned] of Object.entries(this.upgrades())) {
-      if (owned) continue;
-      const itemCost = this.ns.gang.getEquipmentCost(item)
+    for (const upgrade of this.availableUpgrades()) {
+      const itemCost = this.ns.gang.getEquipmentCost(upgrade)
       if (itemCost < moneyThreshold)
-        this.ns.gang.purchaseEquipment(this.name, item);
+        this.ns.gang.purchaseEquipment(this.name, upgrade);
     }
   }
 
-  upgrades() {
-    const itemNames = this.ns.gang.getEquipmentNames();
-    const itemsOwned = this.info().upgrades;
-    const augmentsOwned = this.info().augmentations;
-    const upgrades = {};
-    for (let item of itemNames)
-      upgrades[item] = false;
-    for (let item of itemsOwned)
-      upgrades[item] = true;
-    for (let augment of augmentsOwned)
-      upgrades[augment] = true;
+  availableUpgrades() {
+    const upgrades = new Set(this.ns.gang.getEquipmentNames());
+    // remove owned upgrades
+    for (let item of this.info().upgrades)
+      upgrades.delete(item);
+    // remove owned augments
+    for (let augment of this.info().augmentations)
+      upgrades.delete(augment);
+    // remove rootkits
+    // @TODO update this for hacking gangs
+    for (let item of GangMember.HACKING_ITEMS)
+      upgrades.delete(item);
     return upgrades;
   }
 
+  // @TODO remove!
+  // upgrades1() {
+  //  const itemNames = this.ns.gang.getEquipmentNames();
+  //  const itemsOwned = this.info().upgrades;
+  //  const augmentsOwned = this.info().augmentations;
+  //  const upgrades = {};
+  //  for (let item of itemNames)
+  //    upgrades[item] = false;
+  //  for (let item of itemsOwned)
+  //    upgrades[item] = true;
+  //  for (let augment of augmentsOwned)
+  //    upgrades[augment] = true;
+  //  return upgrades;
+  // }
+
+  // @TODO refactor
   readyForWork() {
     const memberInfo = this.ns.gang.getMemberInformation(this.name);
     const relevantStats = GangMember.STATS[this.gangType];
@@ -277,12 +293,12 @@ class GangMember {
     return true;
   }
 
-  startWork(task) {
-    if (this.info().task !== task)
-      this.ns.gang.setMemberTask(this.name, task);
-  }
-
-  makeMoney() { // wrapper for startWork, but with some logic
+  /**
+   * Wrapper for startWork that takes current skills into consideration.
+   * 
+   * @TODO revisit the skill formula: what are the formulas for HT vs AT?
+   */
+  makeMoney() {
     const stats = Object.values(this.combatStats());
     const statAvg = stats.reduce((a, b) => a + b) / stats.length;
     if (statAvg < 400)
@@ -303,6 +319,15 @@ class GangMember {
 
   gainTerritory() {
     this.startWork(GangMember.TASKS.TERRITORY_WARFARE);
+  }
+
+  trainCombat() {
+    this.startWork(GangMember.TASKS.TRAIN_COMBAT);
+  }
+
+  startWork(task) {
+    if (this.info().task !== task)
+      this.ns.gang.setMemberTask(this.name, task);
   }
 
   combatStats() {
