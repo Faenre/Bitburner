@@ -21,13 +21,13 @@ If no profit can be made, then the answer should be 0.
 
 /** @param {NS} ns */
 export async function main(ns) {
-  const given = [9, [181,166,18,139,27,159,145,93,193,197,41,72,162,156,80,39]];
-  ns.tail();
-  ns.print(solve(given) === 478);
+	const given = [9, [181,166,18,139,27,159,145,93,193,197,41,72,162,156,80,39]];
+	ns.tail();
+	ns.print(solve(given) === 478);
 }
 
 /*
-  This is the exact same problem as III except with a dynamic K instead of k=2.
+	This is the exact same problem as III except with a dynamic K instead of k=2.
 
   Basic approach:
   - Initialize 2 arrays for local minima and maxima
@@ -43,10 +43,10 @@ export async function main(ns) {
  * @param {Array<Number,Array<Number>>} inputData
  */
 export default function solve(inputData) {
-  const k = inputData[0];
-  const prices = inputData[1];
+	const k = inputData[0];
+	const prices = inputData[1];
 
-  return recurse(prices, 0, k);
+	return recurse(prices, 0, k);
 }
 
 function recurse(prices, startAt, counter) {
@@ -62,11 +62,11 @@ function recurse(prices, startAt, counter) {
       maximum = prices[i];
       minimum = prices[i];
     } else if (prices[i] > maximum) {
-      // new selling point found, calculate sum and scan the future
+			// new selling point found, calculate sum and scan the future
       maximum = prices[i];
-      if (i+1 < prices.length && prices[i+1] <= maximum) {
+      // if (i+1 < prices.length && prices[i+1] <= maximum) {
         highestProfit = Math.max(highestProfit, (maximum - minimum) + recurse(prices, i+1, counter-1));
-      }
+      // }
     }
   }
   return highestProfit;

@@ -1,0 +1,492 @@
+{
+	"AeroCorp": {
+		"location": {
+			"city": "Aevum",
+			"name": "AeroCorp"
+		},
+		"reward": {
+			"tradeRep": 23212.875441934077,
+			"sellCash": 355253920.8514189,
+			"SoARep": 2403.0552291421855
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 12,
+		"startingSecurityLevel": 8.18
+	},
+	"Bachman & Associates": {
+		"location": {
+			"city": "Aevum",
+			"name": "Bachman & Associates"
+		},
+		"reward": {
+			"tradeRep": 29939.172537442784,
+			"sellCash": 459203097.04584056,
+			"SoARep": 2405.99294947121
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 15,
+		"startingSecurityLevel": 8.19
+	},
+	"Clarke Incorporated": {
+		"location": {
+			"city": "Aevum",
+			"name": "Clarke Incorporated"
+		},
+		"reward": {
+			"tradeRep": 44509.070441879885,
+			"sellCash": 900136941.2165146,
+			"SoARep": 2805.5229142185667
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 18,
+		"startingSecurityLevel": 9.55
+	},
+	"ECorp": {
+		"location": {
+			"city": "Aevum",
+			"name": "ECorp"
+		},
+		"reward": {
+			"tradeRep": 221121.64985285985,
+			"sellCash": 12653552130.555048,
+			"SoARep": 5000
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 37,
+		"startingSecurityLevel": 17.02
+	},
+	"Fulcrum Technologies": {
+		"location": {
+			"city": "Aevum",
+			"name": "Fulcrum Technologies"
+		},
+		"reward": {
+			"tradeRep": 118878.36292278716,
+			"sellCash": 5775221345.852669,
+			"SoARep": 4565.217391304348
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 25,
+		"startingSecurityLevel": 15.54
+	},
+	"Galactic Cybersystems": {
+		"location": {
+			"city": "Aevum",
+			"name": "Galactic Cybersystems"
+		},
+		"reward": {
+			"tradeRep": 22228.86971751279,
+			"sellCash": 318793882.1620702,
+			"SoARep": 2317.86133960047
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 12,
+		"startingSecurityLevel": 7.89
+	},
+	"NetLink Technologies": {
+		"location": {
+			"city": "Aevum",
+			"name": "NetLink Technologies"
+		},
+		"reward": {
+			"tradeRep": 2638.011169053077,
+			"sellCash": 5987234.498702367,
+			"SoARep": 966.5099882491188
+		},
+		"difficulty": 2.3208842554240867,
+		"maxClearanceLevel": 6,
+		"startingSecurityLevel": 3.29
+	},
+	"Aevum Police Headquarters": {
+		"location": {
+			"city": "Aevum",
+			"name": "Aevum Police Headquarters"
+		},
+		"reward": {
+			"tradeRep": 6568.879219785405,
+			"sellCash": 46814681.87469723,
+			"SoARep": 1571.6803760282019
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 6,
+		"startingSecurityLevel": 5.35
+	},
+	"Rho Construction": {
+		"location": {
+			"city": "Aevum",
+			"name": "Rho Construction"
+		},
+		"reward": {
+			"tradeRep": 5021.212242173963,
+			"sellCash": 31910180.59344744,
+			"SoARep": 1474.7356051703878
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 5,
+		"startingSecurityLevel": 5.02
+	},
+	"Watchdog Security": {
+		"location": {
+			"city": "Aevum",
+			"name": "Watchdog Security"
+		},
+		"reward": {
+			"tradeRep": 8616.322404498407,
+			"sellCash": 72120128.54315491,
+			"SoARep": 1718.566392479436
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 7,
+		"startingSecurityLevel": 5.85
+	},
+	"KuaiGong International": {
+		"location": {
+			"city": "Chongqing",
+			"name": "KuaiGong International"
+		},
+		"reward": {
+			"tradeRep": 125425.44102892507,
+			"sellCash": 6603522874.342647,
+			"SoARep": 4773.7955346651
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 25,
+		"startingSecurityLevel": 16.25
+	},
+	"Solaris Space Systems": {
+		"location": {
+			"city": "Chongqing",
+			"name": "Solaris Space Systems"
+		},
+		"reward": {
+			"tradeRep": 62011.94518938349,
+			"sellCash": 2062413111.0542097,
+			"SoARep": 3698.589894242068
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 18,
+		"startingSecurityLevel": 12.59
+	},
+	"Nova Medical": {
+		"location": {
+			"city": "Ishima",
+			"name": "Nova Medical"
+		},
+		"reward": {
+			"tradeRep": 12920.205972641304,
+			"sellCash": 82108878.4952497,
+			"SoARep": 1474.7356051703878
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 12,
+		"startingSecurityLevel": 5.02
+	},
+	"Omega Software": {
+		"location": {
+			"city": "Ishima",
+			"name": "Omega Software"
+		},
+		"reward": {
+			"tradeRep": 4277.962012988795,
+			"sellCash": 8983823.552459119,
+			"SoARep": 940.0705052878967
+		},
+		"difficulty": 2.230884255424087,
+		"maxClearanceLevel": 10,
+		"startingSecurityLevel": 3.2
+	},
+	"Storm Technologies": {
+		"location": {
+			"city": "Ishima",
+			"name": "Storm Technologies"
+		},
+		"reward": {
+			"tradeRep": 33288.96781064266,
+			"sellCash": 239641714.25373995,
+			"SoARep": 1580.4935370152762
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 25,
+		"startingSecurityLevel": 5.38
+	},
+	"DefComm": {
+		"location": {
+			"city": "New Tokyo",
+			"name": "DefComm"
+		},
+		"reward": {
+			"tradeRep": 29556.21750983957,
+			"sellCash": 357706511.4158932,
+			"SoARep": 2109.283196239718
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 17,
+		"startingSecurityLevel": 7.18
+	},
+	"Global Pharmaceuticals": {
+		"location": {
+			"city": "New Tokyo",
+			"name": "Global Pharmaceuticals"
+		},
+		"reward": {
+			"tradeRep": 28305.258825914243,
+			"sellCash": 240577353.80589464,
+			"SoARep": 1733.2549941245595
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 20,
+		"startingSecurityLevel": 5.9
+	},
+	"Noodle Bar": {
+		"location": {
+			"city": "New Tokyo",
+			"name": "Noodle Bar"
+		},
+		"reward": {
+			"tradeRep": 1113.5828561361939,
+			"sellCash": 1166718.6768874,
+			"SoARep": 734.4300822561692
+		},
+		"difficulty": 1.5308842554240865,
+		"maxClearanceLevel": 5,
+		"startingSecurityLevel": 2.5
+	},
+	"VitaLife": {
+		"location": {
+			"city": "New Tokyo",
+			"name": "VitaLife"
+		},
+		"reward": {
+			"tradeRep": 34331.16109410128,
+			"sellCash": 258840853.8630859,
+			"SoARep": 1621.6216216216214
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 25,
+		"startingSecurityLevel": 5.52
+	},
+	"Alpha Enterprises": {
+		"location": {
+			"city": "Sector-12",
+			"name": "Alpha Enterprises"
+		},
+		"reward": {
+			"tradeRep": 5762.60011203586,
+			"sellCash": 17081306.240855996,
+			"SoARep": 1063.4547591069331
+		},
+		"difficulty": 2.650884255424087,
+		"maxClearanceLevel": 10,
+		"startingSecurityLevel": 3.62
+	},
+	"Blade Industries": {
+		"location": {
+			"city": "Sector-12",
+			"name": "Blade Industries"
+		},
+		"reward": {
+			"tradeRep": 75030.31168184313,
+			"sellCash": 1827693936.0719447,
+			"SoARep": 3111.045828437133
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 25,
+		"startingSecurityLevel": 10.59
+	},
+	"Carmichael Security": {
+		"location": {
+			"city": "Sector-12",
+			"name": "Carmichael Security"
+		},
+		"reward": {
+			"tradeRep": 15218.162282914009,
+			"sellCash": 84588408.36295532,
+			"SoARep": 1368.9776733254994
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 15,
+		"startingSecurityLevel": 4.66
+	},
+	"DeltaOne": {
+		"location": {
+			"city": "Sector-12",
+			"name": "DeltaOne"
+		},
+		"reward": {
+			"tradeRep": 15683.658980250713,
+			"sellCash": 133301489.96936093,
+			"SoARep": 1733.2549941245595
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 12,
+		"startingSecurityLevel": 5.9
+	},
+	"Four Sigma": {
+		"location": {
+			"city": "Sector-12",
+			"name": "Four Sigma"
+		},
+		"reward": {
+			"tradeRep": 55038.369916666874,
+			"sellCash": 842316875.3512074,
+			"SoARep": 2403.0552291421855
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 25,
+		"startingSecurityLevel": 8.18
+	},
+	"Icarus Microsystems": {
+		"location": {
+			"city": "Sector-12",
+			"name": "Icarus Microsystems"
+		},
+		"reward": {
+			"tradeRep": 23922.981827579435,
+			"sellCash": 210835135.23116332,
+			"SoARep": 1768.5076380728553
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 17,
+		"startingSecurityLevel": 6.02
+	},
+	"Joe's Guns": {
+		"location": {
+			"city": "Sector-12",
+			"name": "Joe's Guns"
+		},
+		"reward": {
+			"tradeRep": 1928.871541326896,
+			"sellCash": 3807215.450555197,
+			"SoARep": 919.5064629847238
+		},
+		"difficulty": 2.1608842554240866,
+		"maxClearanceLevel": 5,
+		"startingSecurityLevel": 3.13
+	},
+	"MegaCorp": {
+		"location": {
+			"city": "Sector-12",
+			"name": "MegaCorp"
+		},
+		"reward": {
+			"tradeRep": 166437.61562094674,
+			"sellCash": 8869832456.85565,
+			"SoARep": 4806.110458284371
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 31,
+		"startingSecurityLevel": 16.36
+	},
+	"Universal Energy": {
+		"location": {
+			"city": "Sector-12",
+			"name": "Universal Energy"
+		},
+		"reward": {
+			"tradeRep": 15683.658980250713,
+			"sellCash": 133301489.96936093,
+			"SoARep": 1733.2549941245595
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 12,
+		"startingSecurityLevel": 5.9
+	},
+	"CompuTek": {
+		"location": {
+			"city": "Volhaven",
+			"name": "CompuTek"
+		},
+		"reward": {
+			"tradeRep": 8904.549948911173,
+			"sellCash": 25789064.32742205,
+			"SoARep": 1054.641598119859
+		},
+		"difficulty": 2.6208842554240865,
+		"maxClearanceLevel": 15,
+		"startingSecurityLevel": 3.59
+	},
+	"Helios Labs": {
+		"location": {
+			"city": "Volhaven",
+			"name": "Helios Labs"
+		},
+		"reward": {
+			"tradeRep": 32136.76326343662,
+			"sellCash": 398742574.4292782,
+			"SoARep": 2138.660399529965
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 18,
+		"startingSecurityLevel": 7.28
+	},
+	"LexoCorp": {
+		"location": {
+			"city": "Volhaven",
+			"name": "LexoCorp"
+		},
+		"reward": {
+			"tradeRep": 14011.551239216926,
+			"sellCash": 68805138.6016209,
+			"SoARep": 1277.9083431257343
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 15,
+		"startingSecurityLevel": 4.35
+	},
+	"NWO": {
+		"location": {
+			"city": "Volhaven",
+			"name": "NWO"
+		},
+		"reward": {
+			"tradeRep": 148444.72723767188,
+			"sellCash": 2449779659.320283,
+			"SoARep": 2505.8754406580492
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 50,
+		"startingSecurityLevel": 8.53
+	},
+	"OmniTek Incorporated": {
+		"location": {
+			"city": "Volhaven",
+			"name": "OmniTek Incorporated"
+		},
+		"reward": {
+			"tradeRep": 51505.1612570307,
+			"sellCash": 713573104.681842,
+			"SoARep": 2273.7955346651
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 25,
+		"startingSecurityLevel": 7.74
+	},
+	"Omnia Cybersystems": {
+		"location": {
+			"city": "Volhaven",
+			"name": "Omnia Cybersystems"
+		},
+		"reward": {
+			"tradeRep": 32408.702911643784,
+			"sellCash": 283914708.7457461,
+			"SoARep": 1762.6321974148063
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 22,
+		"startingSecurityLevel": 6
+	},
+	"SysCore Securities": {
+		"location": {
+			"city": "Volhaven",
+			"name": "SysCore Securities"
+		},
+		"reward": {
+			"tradeRep": 19349.35680836175,
+			"sellCash": 112164030.72074203,
+			"SoARep": 1401.2925969447706
+		},
+		"difficulty": 3,
+		"maxClearanceLevel": 18,
+		"startingSecurityLevel": 4.77
+	}
+}

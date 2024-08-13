@@ -31,15 +31,15 @@ Output: []
 
 /** @param {NS} ns */
 export async function main(ns) {
-  const sample1 = [4, [[0, 2], [0, 3], [1, 2], [1, 3]]];
-  const answer1 = [0, 0, 1, 1];
+	const sample1 = [4, [[0, 2], [0, 3], [1, 2], [1, 3]]];
+	const answer1 = [0, 0, 1, 1];
 
-  const sample2 = [3, [[0, 1], [0, 2], [1, 2]]];
-  const answer2 = [];
+	const sample2 = [3, [[0, 1], [0, 2], [1, 2]]];
+	const answer2 = [];
 
-  ns.tail();
-  ns.print(JSON.stringify(solve(sample1, ns)) === JSON.stringify(answer1));
-  ns.print(JSON.stringify(solve(sample2, ns)) === JSON.stringify(answer2));
+	ns.tail();
+	ns.print(JSON.stringify(solve(sample1, ns)) === JSON.stringify(answer1));
+	ns.print(JSON.stringify(solve(sample2, ns)) === JSON.stringify(answer2));
 }
 
 /**
@@ -54,37 +54,37 @@ export async function main(ns) {
  * @param {Array<Number, Array<Number>>}} inputData The given vertices 
  */
 export default function solve(inputData, ns) {
-  const newVertex = (i) => {
-    const edges = [];
-    let color = null;
-    return { i, edges, color }
-  }
-  // Populate the array with Vertex objects
-  const vertices = [];
-  for (let i = 0; i < inputData[0]; i++) 
-    vertices.push(newVertex(i));
+	const newVertex = (i) => {
+		const edges = [];
+		let color = null;
+		return { i, edges, color }
+	}
+	// Populate the array with Vertex objects
+	const vertices = [];
+	for (let i = 0; i < inputData[0]; i++) 
+		vertices.push(newVertex(i));
 
-  // Apply connections
-  const addConnection = (a, b) => {
-    vertices[a].edges.push(vertices[b]);
-    vertices[b].edges.push(vertices[a]);
-  }
-  inputData[1].forEach(edge => addConnection(...edge));
+	// Apply connections
+	const addConnection = (a, b) => {
+		vertices[a].edges.push(vertices[b]);
+		vertices[b].edges.push(vertices[a]);
+	}
+	inputData[1].forEach(edge => addConnection(...edge));
 
-  // Apply colors
-  const opposite = (c) => c ? 0 : 1;
-  let failure = false;
-  const applyColors = (v, mem) => {
-    if (mem.has(v.i)) return;
-    mem.add(v.i);
-    v.edges.forEach(e => {
-      if (e.color === v.color) failure = true;
-      e.color = opposite(v.color);
-      applyColors(e, mem)
-    })
-  }
-  vertices[0].color = 0;
-  applyColors(vertices[0], new Set());
-  
-  return failure ? [] : vertices.map(v => v.color);
+	// Apply colors
+	const opposite = (c) => c ? 0 : 1;
+	let failure = false;
+	const applyColors = (v, mem) => {
+		if (mem.has(v.i)) return;
+		mem.add(v.i);
+		v.edges.forEach(e => {
+			if (e.color === v.color) failure = true;
+			e.color = opposite(v.color);
+			applyColors(e, mem)
+		})
+	}
+	vertices[0].color = 0;
+	applyColors(vertices[0], new Set());
+	
+	return failure ? [] : vertices.map(v => v.color);
 }

@@ -1,4 +1,8 @@
-const HASH_SELL_FOR_MONEY = "Sell for Money";
+const COMMANDS = {
+	'money': 'Sell for Money',
+	'school': 'Improve Studying',
+	'gym': 'Improve Working Out',
+}
 
 /** 
  * This sells hacknet hashes for money (typically, 4.00 hashes == 1 mil).
@@ -8,10 +12,9 @@ const HASH_SELL_FOR_MONEY = "Sell for Money";
  * @arg {boolean} whether to perform once or loop
  * */
 export async function main(ns) {
-  do {
-    const hashes = ns.hacknet.numHashes();
-    const cost = ns.hacknet.hashCost(HASH_SELL_FOR_MONEY);
-    const timesToBuy = Math.floor(hashes / cost);
-    ns.hacknet.spendHashes(HASH_SELL_FOR_MONEY, '', timesToBuy);
-  } while (ns[0] && await ns.sleep(30e3));
+	const command = COMMANDS[ns.args[0] ?? 'money'];
+	do {
+		while (ns.hacknet.numHashes() > ns.hacknet.hashCost(command))
+			ns.hacknet.spendHashes(command);
+	} while (await ns.sleep(30e3));
 }

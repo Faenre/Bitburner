@@ -24,29 +24,29 @@ Determine the maximum possible profit you can earn using at most one transaction
  * @param {NS} ns 
  */
 export async function main(ns) {
-  // const host = ns.args[0];
-  // const file = ns.args[1];
+	// const host = ns.args[0];
+	// const file = ns.args[1];
 
-  // const prices = ns.codingcontract.getData(file, host);
-  // const answer = solve(prices);
-  // ns.codingcontract.attempt(answer, file, host);
-  const sample1 = [4, 51, 167, 179, 133, 88, 34, 183, 144, 154, 4, 171, 16, 42];
-  ns.tail();
-  ns.print(solve(sample1) === 179); // 179
-  const sample2 = [191, 16, 154];
-  ns.print(solve(sample2) === 138);
+	// const prices = ns.codingcontract.getData(file, host);
+	// const answer = solve(prices);
+	// ns.codingcontract.attempt(answer, file, host);
+	const sample1 = [4, 51, 167, 179, 133, 88, 34, 183, 144, 154, 4, 171, 16, 42];
+	ns.tail();
+	ns.print(solve(sample1) === 179); // 179
+	const sample2 = [191, 16, 154];
+	ns.print(solve(sample2) === 138);
 }
 
 /**
  * @param {Array<Number>} inputData the info given for the coding contract
  */
 export default function solve(inputData) {
-  let highest = 0;
-  for (let i = 0; i < inputData.length - 1; i++) {
-    for (let j = i + 1; j < inputData.length; j++) {
-      let difference = inputData[j] - inputData[i];
-      highest = Math.max(highest, difference);
-    }
-  }
-  return highest;
+	let highest = 0;
+	for (let i = 0; i < inputData.length - 1; i++) {
+		for (let j = i + 1; j < inputData.length; j++) {
+			let difference = inputData[j] - inputData[i];
+			highest = Math.max(highest, difference);
+		}
+	}
+	return highest;
 }

@@ -1,8 +1,8 @@
-import { clamp } from 'lib/math';
+import { clamp } from './math';
 
 /**
  * Calculates the optimal HWGW threads within a given RAM budget.
- * 
+ *
  * @arg {NS} ns
  * @arg {Number} maxRam the maximum ram allocated per batch
  * @arg {String} target name of the server
@@ -18,7 +18,7 @@ export function hwgwForRam(ns, maxRam, server, cores=1) {
 
 	function calcHwgw(h) {
 		const hwgw = hwgwForH(ns, h, server, player, cores, wSec, hPct);
-		if (hwgw.ram > maxRam) 
+		if (hwgw.ram > maxRam)
 			return false;
 		if (h * hPct >= 1.00)
 			return hwgw;
@@ -48,7 +48,7 @@ export function hwgwForH(ns, h, server, player, cores=1, wSec=null, hPct=null) {
 	const g = ns.formulas.hacking.growThreads(server, player, server.moneyMax, cores) + 1;
 	const w1 = Math.ceil(ns.hackAnalyzeSecurity(h, null) / wSec) + 1;
 	const w2 = Math.ceil(ns.growthAnalyzeSecurity(g, null, cores) / wSec) + 1;
-	
+
 	return Hwgw(h, g, w1, w2);
 }
 
@@ -57,7 +57,7 @@ const ramPerHwgw = (h, g, w1, w2) => Math.ceil((h * 1.7) + ((g + w1 + w2) * 1.75
 
 /**
  * Helper function that returns h, g, and w times, measured in ms.
- * 
+ *
  * @param {NS} ns
  * @param {String} target server name
  */
@@ -91,4 +91,3 @@ const Hwgw = (h, g, w1, w2) => ({
 	w2: w2,
 	ram: (h * 1.7) + ((g + w1 + w2) * 1.75),
 });
-

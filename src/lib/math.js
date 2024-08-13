@@ -52,4 +52,3 @@ export const avg = (values) => sum(values) / (values.length || 1);
  * @param {Array<Number>} values an array with the numbers to sum.
  */
 export const sum = (values) => values.reduce((a, b) => a + b);
-

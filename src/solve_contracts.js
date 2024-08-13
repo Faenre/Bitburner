@@ -1,15 +1,16 @@
-import { getHosts } from 'lib/servers.js';
-
-import { SOLVERS } from 'contracts/solutions.js';
+import { getHosts } from './lib/servers';
+import { colorize, bold } from './lib/textutils';
+import { SOLVERS } from './contracts/solutions';
 
 /** @param {NS} ns */
 export async function main(ns) {
+	ns.disableLog('ALL');
 	ns.tail();
 	const contracts = Contract.getAllContracts(ns);
 
 	function logResult(c, result) {
 		if (result)
-			ns.print(`SUCCESS solved ${c.type} on ${c.host}, gained: ${result}`);
+			ns.print(`SUCCESS solved ${bold(c.type)} on ${c.host}: ${colorize(result, 'cyan')}`);
 		else
 			ns.print(`ERROR solver FAILED for ${c.host}:${c.filename}! (${c.type})`);
 	}
@@ -20,6 +21,7 @@ export async function main(ns) {
 		.forEach(c => logResult(c, c.solve()));
 
 	// print the ones we can't
+	// @TODO aggregate these into a hash and print as a "bounty board"
 	contracts
 		.filter(c => !c.canSolve())
 		.forEach(c => ns.print(`INFO skipping ${c.host}:${c.filename} (${c.type})`));

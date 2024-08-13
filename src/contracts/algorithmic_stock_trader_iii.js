@@ -48,7 +48,6 @@ export async function main(ns) {
  */
 export default function solve(inputData, startAt=0, counter=2) {
   if (counter === 0 || startAt >= inputData.length) return 0;
-  console.log('starting at i=' + startAt);
 
   let maximum = inputData[startAt];
   let minimum = inputData[startAt];

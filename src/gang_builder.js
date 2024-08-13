@@ -1,7 +1,7 @@
 /*
   Builds a Combat Gang from the ground up.
 
-  Usage: 
+  Usage:
     1. Join a combat gang (e.g. Slum Snakes, Tetrads, The Dark Army, etc)
     2. Run this script (needs > 32gb RAM!)
     3. Let it run (takes ~12 hours to take over the streets, assuming you already have $$)
@@ -10,7 +10,7 @@
 /** @param {NS} ns */
 export async function main(ns) {
   ns.disableLog('gang.purchaseEquipment');
-  
+
   if (!ns.gang.inGang()) {
     ns.tprint('ERROR: not in a gang! Aborting.');
     return
@@ -51,12 +51,11 @@ class Gang {
     this.recruit();
     this.ascend();
     this.buyUpgrades();
-    
-    // 
+
+    //
     this.enableConflictIfReady();
 
-    this.intent = null
-    || this.assignGainRespect()
+    this.intent = this.assignGainRespect()
     || this.assignGainTerritory()
     || this.assignMakeMoney();
   }
@@ -85,14 +84,14 @@ class Gang {
   allTerritoryOwned = () => this.gangInfo.territory == 1.00;
 
   enableConflict() {
-    if (this.conflictEnabled()) 
+    if (this.conflictEnabled())
       return;
     this.ns.gang.setTerritoryWarfare(true);
     this.ns.toast('Gang territory conflicts enabled!', 'info', 10e3);
   }
 
   disableConflict() {
-    if (!this.conflictEnabled()) 
+    if (!this.conflictEnabled())
       return;
     this.ns.gang.setTerritoryWarfare(false);
     if (this.allTerritoryOwned())
@@ -186,7 +185,7 @@ class GangMember {
 
   /**
    * Recruits a new gang member.
-   * 
+   *
    * @param {NS} ns
    * @param {Number} integer ID, between 0-11 inclusive
    */
@@ -295,7 +294,7 @@ class GangMember {
 
   /**
    * Wrapper for startWork that takes current skills into consideration.
-   * 
+   *
    * @TODO revisit the skill formula: what are the formulas for HT vs AT?
    */
   makeMoney() {
@@ -334,7 +333,7 @@ class GangMember {
     const memberInfo = this.ns.gang.getMemberInformation(this.name);
     const relevantStats = GangMember.STATS[this.gangType];
     const combatStats = {};
-    for (let stat of relevantStats) 
+    for (let stat of relevantStats)
       combatStats[stat] = memberInfo[stat];
     return combatStats;
   }

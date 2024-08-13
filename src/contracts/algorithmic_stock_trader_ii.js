@@ -17,11 +17,11 @@ If no profit can be made, then the answer should be 0.
 
 /** @param {NS} ns */
 export async function main(ns) {
-  ns.tail();
-  const sample = [5,4,6,2];
-  ns.print(solve(sample) === 5);
-  const sample2 = [51,5,28,131,109,85,95];
-  ns.print(solve(sample2));
+	ns.tail();
+	const sample = [5,4,6,2];
+	ns.print(solve(sample) === 5);
+	const sample2 = [51,5,28,131,109,85,95];
+	ns.print(solve(sample2));
 }
 
 /**
@@ -35,8 +35,8 @@ export async function main(ns) {
  * @param {Array<Number>} inputData the stock prices
  */
 export default function solve(inputData) {
-  return inputData.reduce(
-    (mem, price) => (price > mem[1]) ? [mem[0] + price - mem[1], price] : [mem[0], price],
-    [0, inputData[0]]
-  )[0];
+	return inputData.reduce(
+		(mem, price) => (price > mem[1]) ? [mem[0] + price - mem[1], price] : [mem[0], price],
+		[0, inputData[0]]
+	)[0];
 }

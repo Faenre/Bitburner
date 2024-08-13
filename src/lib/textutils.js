@@ -1,5 +1,7 @@
+import { clampPct, toThreshold } from './math';
+
 /**
- * Text functions, for coloring and styling terminal output. 
+ * Text functions, for coloring and styling terminal output.
  */
 
 export const COLORS = {
@@ -13,10 +15,68 @@ export const COLORS = {
 	'white': "\u001b[37m",
 	'reset': "\u001b[39m",
 };
-export const colorize = (text, color) => COLORS[color] + text + COLORS.reset;
+export const GRADIENT_CGYR = {
+	'cyan': 1.00,
+	'green': 0.90,
+	'yellow': 0.60,
+	'red': 0.0,
+	'black': -Infinity,
+}
+
+export const BG_COLORS = {
+	'black': "\u001b[40m",
+	'red': "\u001b[41m",
+	'green': "\u001b[42m",
+	'yellow': "\u001b[43m",
+	'blue': "\u001b[44m",
+	'magenta': "\u001b[45m",
+	'cyan': "\u001b[46m",
+	'white': "\u001b[47m",
+	'reset': "\u001b[49m",
+};
+
+/**
+ * Colorizes a block of text.
+ *
+ * Valid colors:
+ * black, red, green, yellow,
+ * blue, magenta, cyan, white
+ *
+ * @arg {String} text The text to be colored
+ * @arg {String} color The color choice
+ */
+export function colorize(text, color) {
+	return COLORS[color] + text + COLORS.reset;
+}
+
+/**
+ * Colorizes the background of a block of text.
+ *
+ * Valid colors:
+ * black, red, green, yellow,
+ * blue, magenta, cyan, white
+ *
+ * @arg {String} text The text to be colored
+ * @arg {String} color The bg color choice
+ */
+export function colorizeBG(text, color) {
+	return BG_COLORS[color] + text + BG_COLORS.reset;
+}
+
+/**
+ * Colorizes text according to a percentage gradient.
+ *
+ * @param {String} text this gets colorized
+ * @param {Number} pct a decimal value between 0 and 1 inclusive
+ * @param {Object} gradient A color threshold gradient with color names => numbers
+ */
+export function colorizeGradient(text, pct, gradient=GRADIENT_CGYR) {
+	return colorize(text, toThreshold(pct, gradient));
+}
 
 export const STYLES = {
 	'bold': "\u001b[1m",
+	'faint': "\u001b[2m",
 	'italic': "\u001b[3m",
 	'underline': "\u001b[4m",
 	'no_bold': "\u001b[22m",
@@ -27,33 +87,17 @@ export const STYLES = {
 export const bold = (text) => STYLES.bold + text + STYLES.no_bold;
 export const italicize = (text) => STYLES.italic + text + STYLES.no_italic;
 export const underline = (text) => STYLES.underline + text + STYLES.no_underline;
+export const faint = (text) => STYLES.faint + text + STYLES.no_bold;
 
 /**
- * Given an array of arrays of string data, pad each column into a spreadsheet grid.
- * 
- * @param {Array<string>} table 2d data structure, 
- * 		with each row having the same type of data.
- * @param {string} colSeparator Column Separator
- * @param {string} colSeparator Row Separator
- * 
- * @return {string} the tabulated, table-ized content, newline-separated
- * 
- * @TODO: add support for header row
- * @TODO: add support for styled text
+ * @param {String} the string to display
+ * @param {Number} the alt font digit to use, 1-9
+ * @return {String}
  */
-export const tabulate = (table, colSeparator = ' | ', rowSeparator = '\n') =>
-	(widths =>
-		table.map(
-			row => row.map(
-				(text, i) => text.padEnd(widths[i])
-			).join(colSeparator)
-		).join(rowSeparator)
-	)(columnMaxWidths(table));
+export function altFont(text, alt) {
+	return `\u001b1${alt}m${text}\u001b10m`;
+}
 
-const columnMaxWidths = (table) =>
-	table[0].map(
-		(_, col) => Math.max(...table.map(row => String(row[col]).length))
-	);
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -64,3 +108,7 @@ export async function main(ns) {
 	ns.print(underline('underline'));
 	ns.tail();
 }
+
+
+// @deprecated use lib/textui instead
+export const tabulate = () => 'tabulate() has been moved to lib/textui';
