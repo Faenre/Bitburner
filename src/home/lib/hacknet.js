@@ -16,7 +16,7 @@ const HASH_SELL_STRING = 'Sell for Money';
 
 /**
  * Uses the formulas API to calculate a Hacknet Server's hash rate.
- * 
+ *
  * @param {NS} ns
  * @param {Number} level
  * @param {Number} ram (in GB)
@@ -27,7 +27,7 @@ export const calcHashRate = (ns, level, ram, cores) => ns.formulas.hacknetServer
 
 
 /**
- * 
+ *
  */
 export class Network {
 	static HASH_SELL_THRESHOLD = 0.20; // at what % of the hash cache do we start auto-spending?
@@ -55,7 +55,7 @@ export class Network {
 		}
 	}
 
-	buyServers(budget) {
+	buyServers(budget, payoffTime=Infinity) {
 		while (budget > this.ns.hacknet.getPurchaseNodeCost()) {
 			budget -= this.ns.hacknet.getPurchaseNodeCost();
 			const nodeIndex = this.ns.hacknet.purchaseNode();
@@ -88,7 +88,7 @@ export class Network {
 }
 
 /**
- * 
+ *
  */
 export class Server {
 	/**
@@ -142,11 +142,12 @@ class Upgrade {
 	constructor(server, type) {
 		this.ns = server.ns;
 		this.server = server;
-		this.name = type;
-		this.buy = () => Upgrade.TYPES[type].buy(this.ns, server.index),
-		this.price = () => Upgrade.TYPES[type].price(this.ns, server.index),
-		this.stats = () => Upgrade.TYPES[type].statAdjustment(server.stats());
+		this.type = type;
 	}
+
+	buy = () => Upgrade.TYPES[this.type].buy(this.ns, this.server.index);
+	price = () => Upgrade.TYPES[this.type].price(this.ns, this.server.index);
+	stats = () => Upgrade.TYPES[this.type].statAdjustment(this.server.stats());
 
 	newHashRate = () => calcHashRate(this.ns, ...this.stats());
 	hashRateIncrease = () => this.newHashRate() - this.server.currentHashRate();

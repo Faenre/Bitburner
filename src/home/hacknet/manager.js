@@ -33,7 +33,7 @@ export async function main(ns) {
 	do {
 		network.buyMoney();
 
-		if (secondsRemaining()){
+		if (secondsRemaining() > 0){
 			ns.print(`INFO Remaining time: ${bold((secondsRemaining()/3600).toFixed(1) + "h")} remaining`);
 			ns.print(timer(secondsInNode() / (maxHours * 3600)));
 			network.buyServers(getBudget(), secondsRemaining());
