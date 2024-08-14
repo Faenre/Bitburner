@@ -1,6 +1,4 @@
 
-export const getHosts = (ns: NS) => ns.read('hosts.txt').trim().split('\n');
-
 export function getAllHostnames(ns: NS, host='home'): Array<string> {
   return ns
     .scan(host)
