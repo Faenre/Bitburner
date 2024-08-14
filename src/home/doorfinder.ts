@@ -7,12 +7,9 @@ import { getAllHostnames } from './lib/servers';
  *
  * @TODO Handle server initialization via pubsub instead
  *
- * @TODO [BP-44] Remove file i/o on bots.txt
- *
  * @param {NS} ns
  * */
 export async function main(ns: NS): Promise<void> {
-	ns.rm('bots.txt'); // @TODO [BP-44]
 	const rootedServers = new Set();
 	const hosts = new Set(getAllHostnames(ns));
 
@@ -30,9 +27,6 @@ export async function main(ns: NS): Promise<void> {
 
 			// TODO send a pubsub message instead
 			ns.run('initialize.js', 1, host);
-
-			// TODO [BP-44]
-			await ns.sleep(0.5e3);
 		}
   } while (await ns.sleep(30e3));
 }
@@ -61,6 +55,5 @@ function enableRootAccessOnServer(ns: NS, host: string): boolean {
   ns.nuke(host);
 	ns.print(`SUCCESS Root acquired on ${host}`);
   ns.toast(`Root acquired on ${host}`, 'success');
-	ns.write('bots.txt', `${host}\n`, 'a'); // @TODO [BP-44]
 	return true;
 }

@@ -1,10 +1,12 @@
+import { getHackableServers } from "../lib/servers";
+
 const HOME = 'home';
 const GROW_RAM_SIZE = 1.75;
 const GROW_SCRIPT = 'toolbox/grow1.js';
 
 /** @param {NS} ns */
 export async function main(ns) {
-  const hosts = ns.read('bots.txt').trim().split('\n');
+  const hosts = getHackableServers(ns);
 	const home = ns.getServer()
 	const cores = home.cpuCores;
 	let serverCount = 0;

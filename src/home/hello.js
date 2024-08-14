@@ -1,10 +1,10 @@
-/** 
+/**
  * Knock on a door and say hello.
- * 
+ *
  * This runs whatever executables you have against the server,
  * and if it's enough, then it nukes it.
- * 
- * @param {NS} ns 
+ *
+ * @param {NS} ns
  * @param {String} target hostname
  * */
 export async function main(ns) {
@@ -12,19 +12,14 @@ export async function main(ns) {
   const executables = ns.ls(ns.getHostname(), '.exe');
 
   let hacks = 0;
-  for (let i = 0; i < executables.length; i++) {
+  for (let i = 0; i < executables.length; i++)
     hacks += await doHack(ns, host, executables[i]);
-  }
 
-  if (hacks < ns.getServerNumPortsRequired(host)) {
-    // ns.toast('The door is closed, Lady 62C.');
+  if (hacks < ns.getServerNumPortsRequired(host))
     return;
-  }
 
   ns.nuke(host);
   ns.toast(`Root acquired on ${host}`);
-
-	ns.write('bots.txt', `${host}\n`, 'a');
 
   ns.run('initialize.js', 1, host);
 }

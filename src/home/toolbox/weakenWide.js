@@ -1,10 +1,12 @@
+import { getHackableServers } from "../lib/servers";
+
 const HOME = 'home';
 const WEAK_RAM_SIZE = 1.75;
 const WEAK_SCRIPT = 'toolbox/weaken1.js';
 
 /** @param {NS} ns */
 export async function main(ns) {
-  const hosts = ns.read('bots.txt').trim().split('\n');
+  const hosts = getHackableServers(ns);
 	const home = ns.getServer()
 	const cores = home.cpuCores;
 	const weakenValue = ns.weakenAnalyze(1, cores);
