@@ -10,9 +10,11 @@
 export async function main(ns) {
 	const sleeves = Sleeve.getCurrentSleeves(ns);
 	ns.disableLog('sleep');
+	const timer = sleeves.inBladeburners ? (async () => await ns.bladeburner.nextUpdate()) : (async () => await ns.sleep(5e3));
 	do {
 		sleeves.forEach(manageSleeve);
-	} while (await ns.sleep(5e3));
+	} while (await timer());
+	// } while (await ns.sleep(5e3));
 	// } while (await ns.bladeburner.nextUpdate());
 }
 
@@ -67,12 +69,12 @@ function manageSleeve(currentSleeve) {
 		// If player is in Bladeburner, help them out:
 		|| currentSleeve.bbHelpPlayerJoin()
 		|| currentSleeve.bbDoContracts()
-		|| currentSleeve.bbDoRecruitment()
 		|| currentSleeve.bbDoFieldAnalysis()
 		|| currentSleeve.bbRecoverStamina()
 		|| currentSleeve.bbReduceChaos()
-		// || currentSleeve.bbTrainStamina()
 		|| currentSleeve.bbGenerateContracts()
+		|| currentSleeve.bbTrainStamina(300)
+		|| currentSleeve.bbDoRecruitment()
 
 		// If the PC has a job, a sleeve should help with it
 		|| currentSleeve.doJob()
@@ -254,7 +256,7 @@ class Sleeve {
 	 * middle of an existing Bladeburner task.
 	 */
 	taskInProgress() {
-		return this.ns.sleeve.getTask(this.id)?.cyclesWorked > 10;
+		return this.ns.sleeve.getTask(this.id)?.cyclesWorked >= 20;
 	}
 
 	bbHelpPlayerJoin() {
@@ -311,16 +313,16 @@ class Sleeve {
 		if (!this.inBladeburners) return false;
 
 		const [current, max] = this.ns.bladeburner.getStamina();
-		const threshold = 0.8 - 0.1 * (Sleeve.currentSleeves.filter(s => this.ns.sleeve.getTask(s.id)?.actionName === ('Hyperbolic Regeneration Chamber')).length - 1);
+		const threshold = 0.9 - 0.1 * (Sleeve.currentSleeves.filter(s => this.ns.sleeve.getTask(s.id)?.actionName === 'Hyperbolic Regeneration Chamber').length - 1);
 		if (current / max >= threshold) return false;
 		if (this.task.actionName === 'Hyperbolic Regeneration Chamber') return true;
 
 		return this.ns.sleeve.setToBladeburnerAction(this.id, 'Hyperbolic Regeneration Chamber');
 	}
 
-	bbTrainStamina() {
+	bbTrainStamina(threshold) {
 		if (this.inBladeburners) return false;
-		if (this.ns.bladeburner.getStamina()[1] >= 200) return false;
+		if (this.ns.bladeburner.getStamina()[1] >= threshold) return false;
 
 		return this.ns.sleeve.setToBladeburnerAction(this.id, 'Training');
 	}

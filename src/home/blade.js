@@ -46,7 +46,8 @@ function drawDashboard(ns, hq, blades) {
 	const sPct = sCurrent / sMaximum;
 	const stamina = 'Stamina:' + colorizeGradient((`${sCurrent.toFixed(1)}/${sMaximum.toFixed(1)} (${(sPct*100).toFixed(1)}%)`).padStart(25), sPct);
 	let rank = `Rank:${ns.formatNumber(hq.rank).padStart(9)}`;
-	if (hq.rank > 400000) rank = colorizeBG(rank, 'magenta');
+	const allBlopsComplete = hq.blackOpIndex === -1;
+	if (hq.rank > 400000) rank = colorizeBG(rank, allBlopsComplete ? 'cyan' : 'magenta');
 	const skillPoints = `SP:${hq.skillPoints.toFixed(0).padStart(7)}`;
 	ns.print(`│ ${[stamina, rank, skillPoints].join(' │ ')} │`)
 
@@ -56,7 +57,7 @@ function drawDashboard(ns, hq, blades) {
 	const bonusTime = ns.bladeburner.getBonusTime();
 	if (bonusTime > 5000) {
 		ns.print('├───────────────────────────────────┴────────────────┴────────────┤');
-		ns.print(`│ Bonus time: ${bonusTime.padEnd(50)} │`);
+		ns.print(`│ Bonus time: ${String(ns.tFormat(bonusTime)).padEnd(51)} │`);
 		ns.print('├───────────┬────────────────────┬─────────────┬──────────────────┤');
 	} else
 		ns.print('├───────────┬────────────────────┬──┴──────────┬─────┴────────────┤');

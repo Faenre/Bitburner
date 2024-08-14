@@ -12,7 +12,8 @@ export async function main(ns) {
   ns.disableLog('gang.purchaseEquipment');
 
   if (!ns.gang.inGang()) {
-    ns.tprint('ERROR: not in a gang! Aborting.');
+    const karma = ns.getPlayer().karma.toFixed(0);
+    ns.tprint(`WARNING: not in a gang! Current progress: ${karma}/-54000`);
     return
   }
 

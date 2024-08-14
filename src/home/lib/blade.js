@@ -50,7 +50,7 @@ export function getHQ(ns) {
 	const city = ns.bladeburner.getCity();
 	const skillPoints = ns.bladeburner.getSkillPoints();
 	const nextBlackOp = ns.bladeburner.getNextBlackOp();
-	const blackOpIndex = BLACK_OP_NAMES.findIndex(nextBlackOp);
+	const blackOpIndex = BLACK_OP_NAMES.findIndex(name => name === nextBlackOp);
 
 	return { rank, stamina, city, skillPoints, nextBlackOp, blackOpIndex };
 }

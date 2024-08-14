@@ -21,7 +21,7 @@ export async function main(ns: NS): Promise<{ return: never; }> {
     return;
   }
   const servers = ns.getPurchasedServers();
-  const serverName = String(ns.args[1] ?? servers[0]) || 'pserv-0';
+  const serverName = String(ns.args[1] || servers[0] || 'pserv-0');
   let result: boolean;
   if (servers.includes(serverName))
     result = ns.upgradePurchasedServer(serverName, 2**ramExponent);
