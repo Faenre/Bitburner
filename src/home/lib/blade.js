@@ -165,12 +165,27 @@ export class Task {
 	static sleeveTask(ns, id) {
 		const task = ns.sleeve.getTask(id) || { actionName: 'Idle' };
 		const type = task.actionType || task.type;
-		const name = task.actionName || (task.type === 'INFILTRATE' ? 'Infiltrating Synthdroids' : 'Other');
+		const name = Task.getSleeveTaskName(task);
 		const timeSpent = task.cyclesWorked || task.timeSpent || 0;
 		const taskTime = task.cyclesNeeded || task.taskTime || 1;
 		let level = -1;
 		if (type === 'Contracts')
 			level = ns.bladeburner.getActionCurrentLevel(type, name);
 		return { type, name, timeSpent, taskTime, level }
+	}
+
+	static getSleeveTaskName(sleeveTask) {
+		switch (sleeveTask.type) {
+			case 'INFILTRATE': return 'Infiltrating Synthdroids';
+			case 'CLASS':
+				if (String(typeof sleeveTask.classType) === 'GymType')
+					return `Training ${sleeveTask.classType}`;
+				else
+					return `Studying ${sleeveTask.classType}`;
+			case 'BLADEBURNER':
+				return sleeveTask.actionName;
+			default:
+				return 'Other';
+		}
 	}
 }

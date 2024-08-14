@@ -32,6 +32,13 @@ const HOMICIDE_SKILL_THRESHOLDS = {
 	agility: 30,
 }
 
+const BLADEBURNER_SKILL_THRESHOLDS = {
+	strength: 70,
+	defense: 70,
+	dexterity: 80,
+	agility: 90,
+};
+
 const BLADEBURNER_CONTRACT_TYPES = [
 	'Retirement',
 	'Bounty Hunter',
@@ -72,6 +79,7 @@ function manageSleeve(currentSleeve) {
 		|| currentSleeve.bbDoFieldAnalysis()
 		|| currentSleeve.bbRecoverStamina()
 		|| currentSleeve.bbReduceChaos()
+		|| currentSleeve.improvePhysicalSkills(BLADEBURNER_SKILL_THRESHOLDS)
 		|| currentSleeve.bbGenerateContracts()
 		|| currentSleeve.bbTrainStamina(300)
 		|| currentSleeve.bbDoRecruitment()
