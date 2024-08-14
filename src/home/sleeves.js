@@ -321,7 +321,7 @@ class Sleeve {
 		if (!this.inBladeburners) return false;
 
 		const [current, max] = this.ns.bladeburner.getStamina();
-		const threshold = 0.9 - 0.1 * (Sleeve.currentSleeves.filter(s => this.ns.sleeve.getTask(s.id)?.actionName === 'Hyperbolic Regeneration Chamber').length - 1);
+		const threshold = 0.9 - 0.1 * (Sleeve.currentSleeves.filter(s => this.ns.sleeve.getTask(s.id)?.actionName === 'Hyperbolic Regeneration Chamber').length);
 		if (current / max >= threshold) return false;
 		if (this.task.actionName === 'Hyperbolic Regeneration Chamber') return true;
 

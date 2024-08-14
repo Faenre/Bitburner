@@ -1,4 +1,4 @@
-import { getHosts } from './lib/servers';
+import { getAllHostnames } from './lib/servers';
 import { colorize, bold } from './lib/textutils';
 import { SOLVERS } from './contracts/solutions';
 
@@ -29,7 +29,7 @@ export async function main(ns) {
 
 class Contract {
 	static getAllContracts = (ns) =>
-		getHosts(ns).flatMap(host =>
+		getAllHostnames(ns).flatMap(host =>
 			ns.ls(host, '.cct').map(filename =>
 				new Contract(ns, host, filename)));
 
