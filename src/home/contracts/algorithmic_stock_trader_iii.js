@@ -1,5 +1,3 @@
-const TYPE = 'Algorithmic Stock Trader III';
-
 /*
 You are given the following array of stock prices (which are numbers) where the i-th element represents the stock price on day i:
 
@@ -10,30 +8,33 @@ Determine the maximum possible profit you can earn using at most two transaction
 If no profit can be made, then the answer should be 0.
 */
 
-
 export async function main(ns) {
-  const host = ns.args[0];
-  const filename = ns.args[1];
+  // const host = ns.args[0];
+  // const filename = ns.args[1];
 
-  // Don't submit anything if the type is wrong:
-  if (ns.codingcontract.getContractType(filename, host) !== TYPE) return;
+  // // Don't submit anything if the type is wrong:
+  // if (ns.codingcontract.getContractType(filename, host) !== TYPE) return;
 
-  const data = ns.codingcontract.getData(filename, host);
-  const answer = solve(data);
+  // const data = ns.codingcontract.getData(filename, host);
+  // const answer = solve(data);
 
-  const result = ns.codingcontract.attempt(answer, filename, host);
-  if (result) 
-    ns.toast(result, 'success', 5000);
-  else
-    ns.toast('Solution failed! Double check and try again.', 'error', null);
-  return
+  // const result = ns.codingcontract.attempt(answer, filename, host);
+  // if (result)
+  //   ns.toast(result, 'success', 5000);
+  // else
+  //   ns.toast('Solution failed! Double check and try again.', 'error', null);
+  // return
+
+	const given = [7,41,123,117,93,77,35,157,31,195,10,32,143,88,172,199,161,89,70,10,49,147,148,138,40,61,104,124,79,145,172,147,106,13,101,12,32,104,135,194];
+	ns.tail();
+	ns.print(solve(given));
 }
 
 /*
   Basic approach:
   - Initialize 2 arrays for local minima and maxima
   - Iterating across the data set, find the minima and maxima
-  - Given each maxima-minima, 
+  - Given each maxima-minima,
 
   - Iterate from left to right,
   - Keep track of each maximum,
@@ -47,22 +48,24 @@ export async function main(ns) {
  * @param {Number} counter an internal counter; leave default
  */
 export default function solve(inputData, startAt=0, counter=2) {
-  if (counter === 0 || startAt >= inputData.length) return 0;
+  if (counter === 0) return 0;
+  if (startAt >= inputData.length) return 0;
 
   let maximum = inputData[startAt];
   let minimum = inputData[startAt];
   let highestProfit = 0;
 
-  for (let i=startAt+1; i < inputData.length; i++) {
-    if (inputData[i] < minimum) {
+  for (let i=startAt; i < inputData.length; i++) {
+  // for (const (value, index) of inputData.slice(startAt)) {
+    const value = inputData[i];
+    if (value < minimum) {
       // new buying point found, ignore all prevous maximums
-      maximum = inputData[i];
-      minimum = inputData[i];
-    } else if (inputData[i] > maximum) {
-      maximum = inputData[i];
-      if (i+1 < inputData.length && inputData[i+1] <= maximum) {
-        highestProfit = Math.max(highestProfit, (maximum - minimum) + solve(inputData, i+1, counter-1));
-      }
+      maximum = value;
+      minimum = value;
+    } else if (value > maximum) {
+      // new selling point found,compare against future
+      maximum = value;
+      highestProfit = Math.max(highestProfit, (maximum - minimum) + solve(inputData, i+1, counter-1));
     }
   }
   return highestProfit;
