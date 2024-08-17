@@ -5,6 +5,7 @@
  * and copy/paste in the below quote.
  *
  * @TODO replace the copy-paste with either a bb-http endpoint or a DOM reader
+ * @TODO add visualizer
  */
 
 const STANEK = ((`

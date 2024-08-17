@@ -1,3 +1,5 @@
+import { bold } from '../lib/textutils';
+
 /**
  * Buys or upgrades ram 'r' onto pserv 'p'
  *
@@ -8,16 +10,17 @@
 export async function main(ns: NS): Promise<{ return: never; }> {
   const ramExponent = Number(ns.args[0]);
   if (!ramExponent) {
-    ns.tprint(`WARNING please include RAM amount`);
-    for (let i=1; i < 21; i++)
-      ns.tprint(
-      'INFO '
-      + ns.formatNumber(ns.getPurchasedServerCost(2**i)).padStart(8)
-      + ' => '
-      + ns.formatRam(2**i, 0).padStart(5)
-      // + ' => '
-        + ` (2**${String(i)})`
-  );
+    ns.tprint(`INFO Please consult the below list:`);
+    for (let i=1; i < 21; i++) {
+      const cost = ns.getPurchasedServerCost(2**i);
+      ns.tprint(''
+        + bold(`(2**${String(i)})`.padStart(7))
+        + ' == '
+        + ns.formatRam(2**i, 0).padStart(5)
+        + ' for $ '
+        + bold(ns.formatNumber(cost).padStart(8))
+      );
+    }
     return;
   }
   const servers = ns.getPurchasedServers();
