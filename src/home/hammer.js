@@ -2,13 +2,24 @@ const HACK = "toolbox/hack1.js";
 const GROW = "toolbox/grow1.js";
 const WEAKEN = "toolbox/weaken1.js";
 
-const PCT_TO_TAKE = 0.70; // 
+const PCT_TO_TAKE = 0.70; //
 
 // REQUIRES FORMULAS API
 
-/** 
- * @param {NS} ns 
- * @arg {String} target hostname
+/**
+ * Per what I have dubbed the "Hammer" strategy, this pre-batcher
+ * attempted to launch multiple hacks against servers with
+ * less-than 100% success chance, to make sure the money was taken.
+ *
+ * It also checked to see if the player owns any stocks in the
+ * target corporation, and returns those.
+ *
+ * This is now entirely outdated but remains for historic visibility.
+ *
+ * @deprecated Outdated, but kept for historic purposes
+ *
+ * @param {NS} ns
+ * @arg {String} ns.args.0 hostname
  */
 export async function main(ns) {
 	// const server_data = JSON.parse(ns.read('server_data.json'));

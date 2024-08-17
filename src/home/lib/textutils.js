@@ -1,4 +1,4 @@
-import { clampPct, toThreshold } from './math';
+import { toThreshold } from './math';
 
 /**
  * Text functions, for coloring and styling terminal output.
