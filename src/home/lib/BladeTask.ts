@@ -1,4 +1,4 @@
-import { BladeburnerCurAction, SleeveBladeburnerTask, SleeveInfiltrateTask, SleeveTask } from "@/NetscriptDefinitions";
+import { BladeburnerCurAction, SleeveBladeburnerTask, SleeveTask } from "@/NetscriptDefinitions";
 import { avg } from './math';
 
 export const JOBS = Object.freeze({
@@ -12,7 +12,7 @@ export const JOBS = Object.freeze({
 		// 'Stealth Retirement Operation',
 		// 'Raid',
 		// 'Sting Operation',
-		// 'Undercover Operation',
+		'Undercover Operation',
 		'Investigation',
 	],
 	'Contracts': [
@@ -23,6 +23,8 @@ export const JOBS = Object.freeze({
 	'General': [
 		'Recruitment',
     'Field Analysis',
+		'Training',
+		'Diplomacy',
 	],
   'Black Operations': [
     "Operation Typhoon",
@@ -128,7 +130,7 @@ class SleeveBladeTask extends BladeTask {
     this.successAvg = avg(this.successPcts);
 	}
 
-	static getSleeveBladeburnerTask(ns: NS, sleeveId: number): SleeveBladeburnerTask | SleeveInfiltrateTask {
+	static getSleeveBladeburnerTask(ns: NS, sleeveId: number): SleeveBladeburnerTask {
 		const task = ns.sleeve.getTask(sleeveId);
 		if (task?.type === 'BLADEBURNER') return task;
 
@@ -139,7 +141,7 @@ class SleeveBladeTask extends BladeTask {
 			actionName: SleeveBladeTask.getSleeveTaskName(task),
 			actionType: 'General',
 			cyclesWorked: task?.['cyclesWorked'] || 0,
-			cyclesNeeded: task?.['cyclesWorked'] || 1,
+			cyclesNeeded: task?.['cyclesNeeded'] || 1,
 			nextCompletion: new Promise(_ => null),
 			tasksCompleted: 1,
 		}
