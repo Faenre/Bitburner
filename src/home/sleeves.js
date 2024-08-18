@@ -79,10 +79,11 @@ function manageSleeve(currentSleeve) {
 		|| currentSleeve.bbDoFieldAnalysis()
 		|| currentSleeve.bbRecoverStamina()
 		|| currentSleeve.bbReduceChaos()
-		|| currentSleeve.improvePhysicalSkills(BLADEBURNER_SKILL_THRESHOLDS)
-		|| currentSleeve.bbGenerateContracts()
-		|| currentSleeve.bbTrainStamina(300)
 		|| currentSleeve.bbDoRecruitment()
+		|| currentSleeve.bbGenerateContracts(150)
+		|| currentSleeve.bbTrainStamina(300)
+		|| currentSleeve.improvePhysicalSkills(BLADEBURNER_SKILL_THRESHOLDS)
+		|| currentSleeve.bbGenerateContracts(500)
 
 		// If the PC has a job, a sleeve should help with it
 		|| currentSleeve.doJob()
@@ -335,12 +336,16 @@ class Sleeve {
 		return this.ns.sleeve.setToBladeburnerAction(this.id, 'Training');
 	}
 
-	bbGenerateContracts() {
+	bbGenerateContracts(threshold) {
 		if (!this.inBladeburners) return false;
 
 		const contractsAvailable = BLADEBURNER_CONTRACT_TYPES
 			.map(c => this.ns.bladeburner.getActionCountRemaining('Contracts', c));
-		if (contractsAvailable.every(count => count > 100)) return false;
+		if (contractsAvailable.every(count => count > threshold)) return false;
+		const operationsAvailable = BLADEBURNER_OPERATION_TYPES
+			.map(c => this.ns.bladeburner.getActionCountRemaining('Operations', c));
+		if (operationsAvailable.every(count => count > threshold)) return false;
+
 		return this.ns.sleeve.setToBladeburnerAction(this.id, 'Infiltrate Synthoids');
 	}
 
