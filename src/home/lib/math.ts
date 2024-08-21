@@ -62,3 +62,14 @@ export function avg(values: number[]): number {
 export function sum(values: number[]): number {
 	return values.reduce((a, b) => a + b);
 }
+
+export const average = (nums: number[]): number =>
+	div(
+		nums.reduce(add),
+		nums.length
+	);
+export const div = (a: number, b: number): number => a / b;
+export const add = (a: number, b: number): number => a + b;
+
+export const max = (a: number, b: number): number => a > b ? a : b;
+export const min = (a: number, b: number): number => a < b ? a : b;

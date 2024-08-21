@@ -1,17 +1,64 @@
 import { BladeburnerCurAction, SleeveBladeburnerTask, SleeveTask } from "@/NetscriptDefinitions";
 import { avg } from './math';
 
+export interface BladeAction {
+	type: string;
+	name: string;
+	countRemaining: number;
+	currentLevel: number;
+	maxLevel: number;
+	time: number;
+	successChances: [number, number];
+	successes: number;
+}
+
+export const BLADE_ACTIONS  = Object.freeze([
+	{ type: 'General', name: 'Recruitment' },
+	{ type: 'General', name: 'Field Analysis' },
+	{ type: 'General', name: 'Training' },
+	{ type: 'General', name: 'Diplomacy' },
+	{ type: 'General', name: 'Hyperbolic Regeneration Chamber' },
+
+	{ type: 'Contracts', name: 'Retirement' },
+	{ type: 'Contracts', name: 'Bounty Hunter' },
+	{ type: 'Contracts', name: 'Tracking' },
+
+	{ type: 'Operations', name: 'Assassination' },
+	{ type: 'Operations', name: 'Stealth Retirement Operation' },
+	{ type: 'Operations', name: 'Raid' },
+	{ type: 'Operations', name: 'Sting Operation' },
+	{ type: 'Operations', name: 'Undercover Operation' },
+	{ type: 'Operations', name: 'Investigation' },
+
+	{ type: 'Black Operations', name: 'Operation Typhoon' },
+	{ type: 'Black Operations', name: 'Operation Zero' },
+	{ type: 'Black Operations', name: 'Operation X' },
+	{ type: 'Black Operations', name: 'Operation Titan' },
+	{ type: 'Black Operations', name: 'Operation Ares' },
+	{ type: 'Black Operations', name: 'Operation Archangel' },
+	{ type: 'Black Operations', name: 'Operation Juggernaut' },
+	{ type: 'Black Operations', name: 'Operation Red Dragon' },
+	{ type: 'Black Operations', name: 'Operation K' },
+	{ type: 'Black Operations', name: 'Operation Deckard' },
+	{ type: 'Black Operations', name: 'Operation Tyrell' },
+	{ type: 'Black Operations', name: 'Operation Wallace' },
+	{ type: 'Black Operations', name: 'Operation Shoulder of Orion' },
+	{ type: 'Black Operations', name: 'Operation Hyron' },
+	{ type: 'Black Operations', name: 'Operation Morpheus' },
+	{ type: 'Black Operations', name: 'Operation Ion Storm' },
+	{ type: 'Black Operations', name: 'Operation Annihilus' },
+	{ type: 'Black Operations', name: 'Operation Ultron' },
+	{ type: 'Black Operations', name: 'Operation Centurion' },
+	{ type: 'Black Operations', name: 'Operation Vindictus' },
+	{ type: 'Black Operations', name: 'Operation Daedalus' },
+] as BladeAction[]);
+
 export const JOBS = Object.freeze({
 	'Operations': [
 		'Assassination',
-    /**
-     * @TODO have a separate "Do These" jobs section.
-     *  Right now we never ever want to perform these
-     *  actions, so we're going to block them.
-     */
-		// 'Stealth Retirement Operation',
-		// 'Raid',
-		// 'Sting Operation',
+		'Stealth Retirement Operation',
+		'Raid',
+		'Sting Operation',
 		'Undercover Operation',
 		'Investigation',
 	],
@@ -25,6 +72,7 @@ export const JOBS = Object.freeze({
     'Field Analysis',
 		'Training',
 		'Diplomacy',
+		'Hyperbolic Regeneration Chamber',
 	],
   'Black Operations': [
     "Operation Typhoon",

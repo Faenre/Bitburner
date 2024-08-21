@@ -18,17 +18,21 @@ export interface SleeveInfo extends SleevePerson {
   mults: Multipliers;
 }
 
-export function getSleeveInfos(ns: NS, numSleeves?: number): SleeveInfo[] {
-  return Array(numSleeves ?? getNumSleeves(ns))
+export function getSleeveInfos(ns: NS, numSleeves: number=8): SleeveInfo[] {
+  return Array(numSleeves)
     .fill(false)
     .map((_, i) => ns.sleeve.getSleeve(i))
-    .map((sleeve, id) => ({...sleeve, id, task: ns.sleeve.getTask(id) }));
+    .map((sleeve, id) => ({
+      ...sleeve,
+      id,
+      task: ns.sleeve.getTask(id)
+    }));
 }
 
-function getNumSleeves(ns: NS): number {
-  for (let i=7; i >= 0; i--)
-    try {
-      if (ns.sleeve.getSleeve(i)) return i+1;
-    } catch {;}
-  return 0;
-}
+// function getNumSleeves(ns: NS): number {
+//   for (let i=7; i >= 0; i--)
+//     try {
+//       if (ns.sleeve.getSleeve(i)) return i+1;
+//     } catch {;}
+//   return 0;
+// }

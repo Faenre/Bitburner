@@ -10,8 +10,7 @@ import { Server } from './HTTP/Server';
  * @param {NS} ns
  * */
 export async function main(ns: NS) {
-	ns.tail();
-
 	const server = new Server(ns);
+	ns.toast('Webserver now online', 'info', 5e3);
 	await server.listen();
 }

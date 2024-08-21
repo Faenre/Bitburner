@@ -31,7 +31,21 @@ export function getPortHandles(ns: NS, serverListenPort=DEFAULT_LISTEN_PORT, ser
 }
 
 /**
+ * The no-fluff version of getFromApi.
+ * Callback and request forming are handled automagically.
  *
+ * @param ns
+ * @param endpoint
+ * @returns
+ */
+export async function getRequest(ns: NS, endpoint: string): Promise<object> {
+  const request = { endpoint, callback: ns.pid + 5000, data: {} };
+  return (await getFromApi(ns, request)).data;
+}
+
+/**
+ *
+ * @public
  * @param ns
  * @param request
  * @param serverListenPort
@@ -41,10 +55,9 @@ export function getPortHandles(ns: NS, serverListenPort=DEFAULT_LISTEN_PORT, ser
 export async function getFromApi(ns: NS, request: PortRequest, serverListenPort?: number, serverResponsePort?: number): Promise<PortResponse> {
   const listenPort = serverListenPort ?? DEFAULT_LISTEN_PORT;
   const responsePort = serverResponsePort ?? DEFAULT_RESPONSE_PORT;
-  ns.clearLog();
 
   ns.writePort(listenPort, request);
-  ns.print(`INFO awaiting on port ${responsePort}`);
+  // ns.print(`INFO requesting resource \`${request.endpoint}\` on port ${responsePort}`);
   const response = await getResponse(ns, responsePort, request.callback);
   return response;
 }

@@ -18,7 +18,7 @@ export class BladeHQ {
 		this.skillPoints = ns.bladeburner.getSkillPoints();
 		this.nextBlackOp = ns.bladeburner.getNextBlackOp();
 		this.nextBlackOpIndex = JOBS['Black Operations']
-			.findIndex(name => name === this.nextBlackOp.name);
+			.findIndex(name => name === this.nextBlackOp?.name);
 		this.bonusTime = ns.bladeburner.getBonusTime();
 	}
 }
@@ -42,14 +42,18 @@ export class City {
 	}
 }
 
+// export interface BladeCharacter {
+// 	name: string;
+// }
 
-export class Blade {
+
+export class BladeCharacter {
 	static blades = {};
 
 	static getBlades(ns: NS, includeSleeves=true) {
 		return Array(1 + (includeSleeves ? ns.sleeve.getNumSleeves() : 0))
 			.fill(null)
-			.map((_, i) => new Blade(ns, i-1));
+			.map((_, i) => new BladeCharacter(ns, i-1));
 	}
 
 	ns: NS;
@@ -59,27 +63,13 @@ export class Blade {
 	isIdle: boolean;
 
 	constructor(ns: NS, sleeveId: number=-1) {
-		Blade.blades[sleeveId] = this;
+		BladeCharacter.blades[sleeveId] = this;
 		this.ns = ns;
 		this.isPlayer = (sleeveId === -1);
 		this.name = this.isPlayer ? 'Player' : `Sleeve.${sleeveId}`;
 
 		this.task = getBladeTask(ns, sleeveId);
 		this.isIdle = this.task.name === 'Idle' || this.task.timeSpent === 0;
-	}
-
-	// @TODO get rid of this, or move it elsewhere
-	static jobsAvailable(ns: NS, isPlayer: boolean) {
-		const jobs = [
-			JOBS.General.map(j => ['General', j]),
-			JOBS.Contracts.map(j => ['Contracts', j]),
-		];
-		if (!isPlayer) return jobs.flat();
-
-		jobs.unshift(JOBS.Operations.map(j => ['Operations', j]));
-		if (ns.bladeburner.getRank() > 4e5)
-			jobs.unshift([['Black Operations', ns.bladeburner.getNextBlackOp().name]]);
-		return jobs.flat();
 	}
 }
 
