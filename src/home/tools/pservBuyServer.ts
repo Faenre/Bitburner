@@ -11,7 +11,7 @@ export async function main(ns: NS): Promise<{ return: never; }> {
   const ramExponent = Number(ns.args[0]);
   if (!ramExponent) {
     ns.tprint(`INFO Please consult the below list:`);
-    for (let i=1; i < 21; i++) {
+    for (let i=1; 2**i <= ns.getPurchasedServerMaxRam(); i++) {
       const cost = ns.getPurchasedServerCost(2**i);
       ns.tprint(''
         + bold(`(2**${String(i)})`.padStart(7))

@@ -1,11 +1,8 @@
 import { clamp, clampPct } from './math';
 
-const SPINNER_FRAMES = '';
-const DOTTED_GRADIENT = '░▒▓'
-const BRAILLE_DOTS = {
-	1: '⠁⡁'
-}
-const BOX_DRAW = {
+export const SPINNER_FRAMES = '|/—\\';
+const _DOTTED_GRADIENT = '░▒▓'
+const _BOX_DRAW = {
 	'single': '│└┬┤┌┼┐├┴─┘',
 	'double': '╝╗╔╚╣╩╦╠═║╬',
 }
@@ -18,8 +15,7 @@ const BOX_DRAW = {
  */
 export const newSpinner = () => {
 	let counter = 0;
-	const frames = '|/—\\';
-	return () => frames[(counter++) % 4];
+	return () => SPINNER_FRAMES[(counter++) % 4];
 }
 
 // @TODO: fix the partial segment
@@ -28,7 +24,7 @@ export const solidProgressBar = (width) => {
 	const fullSegments = (pct) => '█'.repeat(pct * width);
 	const partialSegment = (pct) => (pct * width % 1 > 0) ? PROGRESS_8_BARS[Math.round(pct * width % 1 * 8)] : '';
 
-	const spaces = (pct) => ' '.repeat(Math.max(0, width - Math.ceil(pct * width)));
+	// const spaces = (pct) => ' '.repeat(Math.max(0, width - Math.ceil(pct * width)));
 	return (p) => `${fullSegments(clampPct(p)) + partialSegment(clampPct(p))}`.padEnd(width);
 }
 /**
@@ -38,7 +34,8 @@ export const solidProgressBar = (width) => {
  * @param {Number} width the number of characters to use
  * @return {String} a progress bar.
  */
-export const SolidProgressBar = (pct, width) => solidProgressBar(width)(pct);
+export const SolidProgressBar = (pct, width, full='=', empty=' ') =>
+	solidProgressBar(width, full, empty)(pct);
 
 export const segmentBar = (width, full='=', empty=' ') => {
 	const fullSegments = (pct) => full.repeat(clamp(0, width, Math.floor(pct * width)));
@@ -53,7 +50,7 @@ export class TerminalUI {
 
 	constructor(ns) {
 		this.ns = ns;
-		this.lines = Array();
+		this.lines = [];
 	}
 
 	add(line, print=true) {

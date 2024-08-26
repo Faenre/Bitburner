@@ -18,6 +18,10 @@ export interface SleeveInfo extends SleevePerson {
   mults: Multipliers;
 }
 
+export const SleeveTaskType = {
+  'INFILTRATE': 1,
+} as const;
+
 export function getSleeveInfos(ns: NS, numSleeves: number=8): SleeveInfo[] {
   return Array(numSleeves)
     .fill(false)

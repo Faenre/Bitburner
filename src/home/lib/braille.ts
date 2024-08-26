@@ -7,26 +7,14 @@ export async function main(ns) {
 	ns.tail();
 	ns.disableLog('sleep');
 	ns.clearLog();
-	const hex1 = numberToHex(1);
-	const hex2 = numberToHex(2);
-	const hex8 = numberToHex(8);
-	const sampleBits = [true, false, false, true, false, true, false, true].reverse();
-	const sampleHex = numberToHex(bitsToDecimal(sampleBits));
-
-	// ns.print(hex1, brailleCharacter(hex1));
-	// ns.print(hex2, brailleCharacter(hex2));
-	// ns.print(hex8, brailleCharacter(hex8));
-	// ns.print(sampleHex, brailleCharacter(sampleHex));
+	// const sampleBits = [true, false, false, true, false, true, false, true].reverse();
 	do {
 		ns.clearLog();
 		const chars = [];
 		for (let i=1; i < 8; i++)
-			// ns.print(i, brailleCharacter(numberToHex(i)));
-			// ns.print(randomBrailleForValue(i));
 			chars.push(randomBrailleForValue(i));
 		ns.print(chars.join(''));
 	} while (await ns.sleep(1e3));
-	// ns.print(bold(brailleCharacter('73')));
 
 	const exampleSleeves = [
 		true, true,
@@ -55,16 +43,22 @@ function repositionBitsLTR(bits) {
 	].reverse()
 }
 
-export function brailleForValue(value) {
-	// fill the array with true values equal to the given number
-	const bits = Array(8).fill(false);
-	for (let i=clamp(0, value, 8); i; i--) bits[i] = true;
-
-	// return braille character
-	return brailleCharacter(numberToHex(bitsToDecimal(bits)));
+export function brailleForPercent(pct: number, random=false) {
+	return brailleForValue(Math.round(pct * 8), random);
 }
 
-export function randomBrailleForValue(value) {
+export function brailleForValue(value: number, random=false) {
+	// fill the array with true values equal to the given number
+	const bits = Array(8).fill(false);
+	for (let i=0; i < clamp(0, value, 8); i++) bits[i] = true;
+
+	if (random) shuffle(bits);
+
+	// return braille character
+	return brailleCharacter(numberToHex(bitsToDecimal(repositionBitsLTR(bits))));
+}
+
+export function randomBrailleForValue(value: number) {
 	// fill the array with true values equal to the given number
 	const bits = Array(8).fill(false);
 	for (let i=0; i < clamp(0, value, 8); i++) bits[i] = true;
@@ -79,17 +73,23 @@ export function randomBrailleForValue(value) {
 	return brailleCharacter(numberToHex(bitsToDecimal(bits)));
 }
 
+function shuffle(bits: Array<boolean>): void {
+	// durstenfeld shuffle the bits around
+	for (let i=7; i; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[bits[i], bits[j]] = [bits[j], bits[i]];
+	}
+}
+
 // input: [false, false, true, ...]
-function bitsToDecimal(bits) {
+function bitsToDecimal(bits: Array<boolean>): number {
 	return parseInt(
-		bits
-			.map(b => Number(b))
-			.join(''),
+		bits.map(b => Number(b)).join(''),
 		2
 	)
 }
 
-function numberToHex(number) {
+function numberToHex(number: number): string {
 	return number.toString(16).padStart(2, '0');
 }
 
@@ -97,6 +97,6 @@ function numberToHex(number) {
  * @param {String} hex A 2-decimal hex code in the range [00-FF]
  * @return {String} a single braille character
  */
-function brailleCharacter(hex) {
-	return String.fromCharCode(BRAILLE_START + hex);
+function brailleCharacter(hex: string): string {
+	return String.fromCharCode(parseInt(BRAILLE_START + hex));
 }
