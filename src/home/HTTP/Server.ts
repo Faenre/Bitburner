@@ -26,7 +26,7 @@ export class Server {
    * Listens to a port, handles web requests, and sends responses.
    */
 	async listen() {
-		this.ns.clearPort(this.listenPort);
+		// this.ns.clearPort(this.listenPort);
 		this.ns.clearPort(this.responsePort);
 
 		this.ns.print(`INFO Now listening on port ${this.listenPort}.`);
