@@ -7,8 +7,10 @@
     3. Let it run (takes ~12 hours to take over the streets, assuming you already have $$$)
 */
 
+import { GangGenInfo, NS } from "@/NetscriptDefinitions";
+
 /** @param {NS} ns */
-export async function main(ns) {
+export async function main(ns: NS) {
   ns.disableLog('gang.purchaseEquipment');
 
   if (!ns.gang.inGang()) {
@@ -16,8 +18,6 @@ export async function main(ns) {
     ns.tprint(`WARNING: not in a gang! Current progress: ${karma}/-54000`);
     return
   }
-
-  ns.tail();
 
   do {
     const gang = new Gang(ns);
@@ -36,7 +36,12 @@ class Gang {
     MAKE_MONEY: 'Making Money',
   }
 
-  constructor(ns) {
+  gangInfo: GangGenInfo;
+  members: GangMember[];
+  ns: NS;
+  intent: string;
+
+  constructor(ns: NS) {
     this.gangInfo = ns.gang.getGangInformation();
     this.members = ns.gang.getMemberNames().map((name) => new GangMember(ns, name));
     this.ns = ns;
@@ -188,9 +193,9 @@ class GangMember {
    * Recruits a new gang member.
    *
    * @param {NS} ns
-   * @param {Number} integer ID, between 0-11 inclusive
+   * @param {Number} id ID, between 0-11 inclusive
    */
-  static recruit(ns, id) {
+  static recruit(ns: NS, id: number) {
     const name = GangMember.NAMES[id];
     ns.gang.recruitMember(name);
     ns.toast(`Recruited ${name}!`, 'success', 6000);
@@ -199,7 +204,11 @@ class GangMember {
     return gangMember;
   }
 
-  constructor(ns, name) {
+  ns: NS;
+  name: string;
+  gangType: string;
+
+  constructor(ns: NS, name: string) {
     this.ns = ns;
     this.name = name;
     this.gangType = 'combat';
@@ -207,7 +216,7 @@ class GangMember {
 
   info = () => this.ns.gang.getMemberInformation(this.name);
 
-  updateName(id) {
+  updateName(id: number) {
     const expectedName = GangMember.NAMES[id]
     if (this.name != expectedName) {
       this.ns.gang.renameMember(this.name, expectedName);
@@ -228,17 +237,17 @@ class GangMember {
   }
 
   // formula provided thanks to jeek / @tadzhikistan on discord
-  ascendThreshold = (mult) => 1.66 - 0.62 / Math.exp((2 / mult) ** 2.24);
+  ascendThreshold = (mult: number) => 1.66 - 0.62 / Math.exp((2 / mult) ** 2.24);
 
   avgAscensionBonus() {
     const expectedResults = this.ns.gang.getAscensionResult(this.name);
     if (!expectedResults) return 0;
     const stats = GangMember.STATS[this.gangType];
-    return stats.reduce((sum, stat) => sum + (expectedResults[stat] || 1), 0) / stats.length;
+    return stats.reduce((sum: number, stat: string) => sum + (expectedResults[stat] || 1), 0) / stats.length;
   }
 
   upgradeEquipment() {
-    let moneyThreshold = this.ns.getPlayer().money * GangMember.WALLET_THRESHOLD;
+    const moneyThreshold = this.ns.getPlayer().money * GangMember.WALLET_THRESHOLD;
     for (const upgrade of this.availableUpgrades()) {
       const itemCost = this.ns.gang.getEquipmentCost(upgrade)
       if (itemCost < moneyThreshold)
@@ -249,32 +258,17 @@ class GangMember {
   availableUpgrades() {
     const upgrades = new Set(this.ns.gang.getEquipmentNames());
     // remove owned upgrades
-    for (let item of this.info().upgrades)
+    for (const item of this.info().upgrades)
       upgrades.delete(item);
     // remove owned augments
-    for (let augment of this.info().augmentations)
+    for (const augment of this.info().augmentations)
       upgrades.delete(augment);
     // remove rootkits
     // @TODO update this for hacking gangs
-    for (let item of GangMember.HACKING_ITEMS)
+    for (const item of GangMember.HACKING_ITEMS)
       upgrades.delete(item);
     return upgrades;
   }
-
-  // @TODO remove!
-  // upgrades1() {
-  //  const itemNames = this.ns.gang.getEquipmentNames();
-  //  const itemsOwned = this.info().upgrades;
-  //  const augmentsOwned = this.info().augmentations;
-  //  const upgrades = {};
-  //  for (let item of itemNames)
-  //    upgrades[item] = false;
-  //  for (let item of itemsOwned)
-  //    upgrades[item] = true;
-  //  for (let augment of augmentsOwned)
-  //    upgrades[augment] = true;
-  //  return upgrades;
-  // }
 
   // @TODO refactor
   readyForWork() {
@@ -282,7 +276,7 @@ class GangMember {
     const relevantStats = GangMember.STATS[this.gangType];
     let currentSum = 0;
     let ascensionMultipliers = 0;
-    for (let stat of relevantStats) {
+    for (const stat of relevantStats) {
       currentSum += memberInfo[stat];
       ascensionMultipliers += memberInfo[`${stat}_asc_mult`];
     }
@@ -325,16 +319,16 @@ class GangMember {
     this.startWork(GangMember.TASKS.TRAIN_COMBAT);
   }
 
-  startWork(task) {
+  startWork(task: string) {
     if (this.info().task !== task)
       this.ns.gang.setMemberTask(this.name, task);
   }
 
-  combatStats() {
+  combatStats(): Record<string, number> {
     const memberInfo = this.ns.gang.getMemberInformation(this.name);
     const relevantStats = GangMember.STATS[this.gangType];
     const combatStats = {};
-    for (let stat of relevantStats)
+    for (const stat of relevantStats)
       combatStats[stat] = memberInfo[stat];
     return combatStats;
   }
