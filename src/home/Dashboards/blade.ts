@@ -88,7 +88,7 @@ function drawDashboard(ns: NS, bladeData: BladeData, includeSleeves?: boolean) {
 	for (const city of cities) {
 		const name = city.name === hq.city ? bold(city.name.padEnd(9)) : city.name.padEnd(9);
 		const population = colorizeGradient(ns.formatNumber(city.population).padStart(8), city.population / preferredPop) + ' synthoids';
-		const chaos = colorizeGradient(city.chaos.toFixed(1).padStart(5) + ' chaos', 30 / city.chaos);
+		const chaos = colorizeGradient(ns.formatNumber(city.chaos, 0).padStart(5) + ' chaos', 30 / city.chaos);
 		const communities = String(city.communities).padStart(4) + ' communities';
 		ns.print(`│ ${[name, population, chaos, communities].join(' │ ')} │`);
 	}
@@ -96,7 +96,7 @@ function drawDashboard(ns: NS, bladeData: BladeData, includeSleeves?: boolean) {
 	ns.print('├───────────┼────────────────────┼─────────────┼──────────────────┤');
 
 	const totalPop = ns.formatNumber(sum(cities.map(c => c.population))).padStart(8) + ' total pop';
-	const avgChaos = avg(cities.map(c => c.chaos)).toFixed(1).padStart(5) + ' avg  ';
+	const avgChaos = ns.formatNumber(avg(cities.map(c => c.chaos)), 0).padStart(5) + ' avg  ';
 	const totalCommunities = String(sum(cities.map(c => c.communities))).padStart(4) + ' communities';
 	ns.print(`│ ${['Global:  ', totalPop, avgChaos, totalCommunities].join(' │ ')} │`);
 
